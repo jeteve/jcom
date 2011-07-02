@@ -7,8 +7,14 @@ my $builder = Module::Build->new(
     license             => 'perl',
     dist_author         => q{Jerome Eteve <jerome@eteve.net>},
     dist_version_from   => 'lib/JCOM/DB.pm',
+    requires => {
+	Moose => '1.23'
+    },
     build_requires => {
         'Test::More' => 0,
+	'Test::Exception' => 0,
+	'DBI' => 0,
+	'DBD::Pg' => 0,
     },
     add_to_cleanup      => [ 'JCOM-DB-*' ],
     create_makefile_pl => 'traditional',
