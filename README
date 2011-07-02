@@ -1,0 +1,13 @@
+This is the project jcom.
+
+Its aim is to contain various utility Perl (but not only) software packages that are common
+to all my development projects.
+
+If you're interested in participating, drop me a note at jerome@eteve.net
+
+It contains:
+
+JCOM-DB
+  
+   A Perl package that contains some database specific classes and role to use and to consume in
+   your own database classes. At the moment, it's Postgresql oriented.
