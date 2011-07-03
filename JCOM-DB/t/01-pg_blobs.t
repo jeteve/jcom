@@ -12,14 +12,14 @@ sub jcom_get_dbh{ return shift->dbh(); }
 
 package main;
 unless( $ENV{'TEST_PG_DSN'} && $ENV{'PGUSER'} && $ENV{'PGPASSWORD'} ){
-    BAIL_OUT(q|
+    plan skip_all => q|
 No TEST_PG_DSN specified in environment. Bailing out.
 
 run this with something like:
 
 TEST_PG_DSN="dbi:Pg:dbname=testdb;host=localhost" PGUSER=bill PGPASSWORD=baroud" perl -Ilib t/...
 
-|);
+|;
 }
 
 
