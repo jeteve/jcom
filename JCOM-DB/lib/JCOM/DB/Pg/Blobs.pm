@@ -1,7 +1,7 @@
 package JCOM::DB::Pg::Blobs;
 use Moose::Role;
 
-requires 'jcom_get_dbh';
+with qw/JCOM::DB::DBIAble/;
 
 =head1 NAME
 
