@@ -15,6 +15,8 @@ my $builder = Module::Build->new(
 	'Test::Exception' => 0,
 	'DBI' => 0,
 	'DBD::Pg' => 0,
+	'DBIx::Class' => 0,
+	'Crypt::CBC' => 0,
     },
     add_to_cleanup      => [ 'JCOM-DB-*' ],
     create_makefile_pl => 'traditional',
