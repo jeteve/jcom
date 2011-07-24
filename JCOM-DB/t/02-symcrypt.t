@@ -54,6 +54,7 @@ lives_ok(sub{ $schema->txn_begin();} , "Ok beginning transation");
 $schema->storage->dbh_do(
     sub {
 	my ($storage, $dbh, @cols) = @_;
+	$dbh->do('DROP TABLE IF EXISTS test_arow');
 	$dbh->do("CREATE TABLE test_arow(id SERIAL,a TEXT NOT NULL)");
     });
 
@@ -69,18 +70,12 @@ ok( my $rt_row = $schema->resultset('ARow')->find($row->id()) , "Ok Found it in 
 cmp_ok( $rt_row->a() , 'eq' , $row->a() , "And the value of a has stayed the same");
 
 
-# ok( my $dbh = DBI->connect($dsn , '' , '' , { AutoCommit => 1 }) , "Ok connecting to db");
-# unless( $dbh ){
-#     BAIL_OUT("Could not connect to DB using $dsn");
-# }
-
-# $dbh->begin_work();
-
-
 
 done_testing();
 
+
+
 END{
-    $schema->txn_rollback();
-#    $dbh->rollback() if $dbh;
+    $schema->txn_commit();
+    #$schema->txn_rollback();
 }
