@@ -76,6 +76,6 @@ done_testing();
 
 
 END{
-    $schema->txn_commit();
-    #$schema->txn_rollback();
+    $schema->txn_commit() if $schema;
+    #$schema->txn_rollback() if $schema;
 }

@@ -24,6 +24,10 @@ fyi, GnuPG compat mode means:
 
 cipher = Rijndael (aes128), compression = Zlib, modification detection code (MDC) = 1
 
+You can decrypt the stored bytes with
+
+select pgp_sym_decrypt_bytea(dearmor( ... ), 'Boudin Blanc aux noisettes' , 'compress-algo=2') from .... ;
+
 =head1 SYNOPSYS
 
 In your schema, make sure you expose the jcom_sym_key accessor.
@@ -62,6 +66,12 @@ to set the jcom_sym_key:
   ## rt_row->a() is now the same as the original.
 
 
+IMPORTANT NOTES:
+
+This will store/retrieve the given string as BYTES, not as a unicode string.
+
+To work in tainted mode, you need to use https://github.com/WCN/Crypt-OpenPGP/commits/subkeys-rijndael-taint
+
 =cut
 
 
@@ -83,37 +93,40 @@ sub register_column{
 	##  Installing filter_column on the column
 	$self->filter_column(
 	    $column => {
-		filter_to_storage => \&_encrypt_column,
-		filter_from_storage => \&_decrypt_column
+		filter_to_storage => \&_jcom_encrypt_column,
+		filter_from_storage => \&_jcom_decrypt_column
 	    });	
     } # End of option jcom_symcrypt
 }
 
-sub _encrypt_column{
+sub _jcom_encrypt_column{
     my ($self, $value) = @_;
-    return $self->_build_cypher->encrypt( Data => $value,
-					  Passphrase => 'toto',
+    return $self->_jcom_build_cypher->encrypt( Data => $value,
+					  Passphrase => $self->_jcom_get_sym_key(),
 					  Armour => 1,
 					);
 }
 
-sub _decrypt_column{
+sub _jcom_decrypt_column{
     my ($self, $value) = @_;
-    return $self->_build_cypher->decrypt( Data => $value,
-					  Passphrase => 'toto',
+    return $self->_jcom_build_cypher->decrypt( Data => $value,
+					  Passphrase => $self->_jcom_get_sym_key(),
 					);
 }
 
-sub _build_cypher{
+sub _jcom_build_cypher{
+    my ($self) = @_;
+    return Crypt::OpenPGP->new( Compat => 'GnuPG' );
+}
+
+sub _jcom_get_sym_key{
     my ($self) = @_;
     my $schema = $self->result_source->schema();
     my $key = $schema->jcom_sym_key();
     unless( $key  ){
 	$schema->throw_exception( "Could not find any defined jcom_sym_key in Schema $schema.");
     }
-    # return Crypt::CBC->new( -key    => $key,
-    # 			    -cipher => 'Blowfish' );
-    return Crypt::OpenPGP->new( Compat => 'GnuPG' );
+    return $key;
 }
 
 1;
