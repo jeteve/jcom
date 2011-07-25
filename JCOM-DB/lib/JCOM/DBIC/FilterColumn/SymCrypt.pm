@@ -5,7 +5,7 @@ use warnings;
 use base qw/DBIx::Class/;
 
 
-use Crypt::CBC;
+use Crypt::OpenPGP;
 use namespace::clean;
 
 =head1 NAME
@@ -14,7 +14,15 @@ JCOM::DBIC::FilterColumn::SymCrypt - Symetric encryption filtering for DBIC Row 
 
 =head1 DESCRIPTION
 
+This package allows you to implement symetric encryption on some columns of
+your DBIx::Class schema easily.
 
+It uses Crypt::OpenPGP in the backend in GnuPG compat mode  and aims to stay compatible with Postgresql
+pgcrypto open pgp symetrical encryption functions.
+
+fyi, GnuPG compat mode means:
+
+cipher = Rijndael (aes128), compression = Zlib, modification detection code (MDC) = 1
 
 =head1 SYNOPSYS
 
@@ -83,12 +91,17 @@ sub register_column{
 
 sub _encrypt_column{
     my ($self, $value) = @_;
-    return $self->_build_cypher->encrypt_hex($value);
+    return $self->_build_cypher->encrypt( Data => $value,
+					  Passphrase => 'toto',
+					  Armour => 1,
+					);
 }
 
 sub _decrypt_column{
     my ($self, $value) = @_;
-    return $self->_build_cypher->decrypt_hex($value);
+    return $self->_build_cypher->decrypt( Data => $value,
+					  Passphrase => 'toto',
+					);
 }
 
 sub _build_cypher{
@@ -98,8 +111,9 @@ sub _build_cypher{
     unless( $key  ){
 	$schema->throw_exception( "Could not find any defined jcom_sym_key in Schema $schema.");
     }
-    return Crypt::CBC->new( -key    => $key,
-			    -cipher => 'Blowfish' );    
+    # return Crypt::CBC->new( -key    => $key,
+    # 			    -cipher => 'Blowfish' );
+    return Crypt::OpenPGP->new( Compat => 'GnuPG' );
 }
 
 1;
