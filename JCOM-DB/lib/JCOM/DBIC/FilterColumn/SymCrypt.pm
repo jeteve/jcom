@@ -6,6 +6,7 @@ use base qw/DBIx::Class/;
 
 
 use Crypt::OpenPGP;
+use Encode;
 use namespace::clean;
 
 =head1 NAME
@@ -68,7 +69,10 @@ to set the jcom_sym_key:
 
 IMPORTANT NOTES:
 
-This will store/retrieve the given string as BYTES, not as a unicode string.
+This will store/retrieve the given string as unicode strings by default.
+
+If you with to store/retrieve binary data (strings of Bytes), use the flag jcom_symcrypt_binary
+in your column definition.
 
 To work in tainted mode, you need to use https://github.com/WCN/Crypt-OpenPGP/commits/subkeys-rijndael-taint
 
@@ -90,11 +94,35 @@ sub register_column{
 
     $self->next::method($column,$info, @rest);
     if( $info->{'jcom_symcrypt'} ){
+	my $encrypt = sub{
+	    my ($self, $value) = @_;
+	    return _jcom_encrypt_column($self, $value);
+	};
+	my $decrypt = sub{
+	    my ($self , $value) = @_;
+	    return _jcom_decrypt_column($self, $value);
+	};
+	unless( $info->{'jcom_symcrypt_binary'} ){
+	    ## We need to wrap with utf8 encoding/decoding before encrypting
+	    ## and after decrypting
+	    my $orig_enc = $encrypt;
+	    $encrypt = sub{
+		my ($self , $value) = @_;
+		return &$orig_enc($self , Encode::encode('UTF-8',$value));
+	    };
+	    my $orig_dec = $decrypt;
+	    $decrypt = sub{
+		my ($self , $value) = @_;
+		return Encode::decode('UTF-8' , &$orig_dec($self, $value));
+	    }
+	}
+
+
 	##  Installing filter_column on the column
 	$self->filter_column(
 	    $column => {
-		filter_to_storage => \&_jcom_encrypt_column,
-		filter_from_storage => \&_jcom_decrypt_column
+		filter_to_storage => $encrypt,
+		filter_from_storage => $decrypt,
 	    });	
     } # End of option jcom_symcrypt
 }

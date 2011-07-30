@@ -1,4 +1,7 @@
 #!perl -T
+
+use utf8;
+
 use Test::More;
 use Test::Exception ;
 use DBI;
@@ -17,12 +20,17 @@ use JCOM::DBIC::FilterColumn::SymCrypt;
 use base qw/DBIx::Class::Core/;
 __PACKAGE__->load_components(qw/+JCOM::DBIC::FilterColumn::SymCrypt/);
 __PACKAGE__->table('test_arow');
-__PACKAGE__->add_column('id', 'a');
+__PACKAGE__->add_column('id', 'a' , 'b');
 __PACKAGE__->set_primary_key('id');
 
 __PACKAGE__->add_columns( 'a' ,
                           { %{__PACKAGE__->column_info('a')},
                             jcom_symcrypt => 1
+                          });
+__PACKAGE__->add_columns( 'b' ,
+                          { %{__PACKAGE__->column_info('b')},
+                            jcom_symcrypt => 1,
+			    jcom_symcrypt_binary => 1,
                           });
 
 1;
@@ -55,7 +63,7 @@ $schema->storage->dbh_do(
     sub {
 	my ($storage, $dbh, @cols) = @_;
 	$dbh->do('DROP TABLE IF EXISTS test_arow');
-	$dbh->do("CREATE TABLE test_arow(id SERIAL,a TEXT NOT NULL)");
+	$dbh->do("CREATE TABLE test_arow(id SERIAL,a TEXT NOT NULL, b TEXT)");
     });
 
 ## We need to do this, because our ARow class is in the same file.
@@ -69,7 +77,25 @@ ok( my $row = $schema->resultset('ARow')->create({ a => 'Dis camion' }) , "Ok ro
 ok( my $rt_row = $schema->resultset('ARow')->find($row->id()) , "Ok Found it in the DB");
 cmp_ok( $rt_row->a() , 'eq' , $row->a() , "And the value of a has stayed the same");
 
+## For unicode/binary testing.
+my $unistr = "\x{00B5}\x{03A9}";
+{
+    ok( utf8::is_utf8($unistr) , "Ok this string is marked as unicode/UTF8");
+    ok( $row->update({ a => $unistr }) , "Ok setting a unicode");
+    ## Round trip
+    ok( my $rt_row = $schema->resultset('ARow')->find($row->id()) , "Ok Found it in the DB");
+    cmp_ok( $rt_row->a() , 'eq' , $unistr , "Retrieved string is correct");
+    ok( utf8::is_utf8($rt_row->a()) , "And is utf8");
+}
 
+{
+    ## Now test a pure binary storage
+    my $bin = Encode::encode_utf8($unistr);
+    ok( $row->update({ b => $bin}) , "Ok update");
+    ok( my $rt_row = $schema->resultset('ARow')->find($row->id()) , "Ok Found it in the DB");
+    cmp_ok( $rt_row->b() , 'eq' ,  $bin , "Retrieved bytes are correct");
+    ok( ! utf8::is_utf8($rt_row->b()) , "And are NOT utf8");
+}
 
 done_testing();
 
