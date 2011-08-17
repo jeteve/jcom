@@ -9,6 +9,9 @@ my $builder = Module::Build->new(
     dist_version_from   => 'lib/JCOM/BM.pm',
     build_requires => {
         'Test::More' => 0,
+	'Moose' => 0,
+	'Module::Pluggable::Object' => 0,
+	'DBIx::Class' => 0,
     },
     add_to_cleanup      => [ 'JCOM-BM-*' ],
     create_makefile_pl => 'traditional',

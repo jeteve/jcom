@@ -1,0 +1,80 @@
+package JCOM::BM::DBICFactory;
+use Moose;
+
+=head1 NAME
+
+JCOM::BM::DBICFactory - A factory class that decorates a L<DBIx::Class::ResultSet>.
+
+=head1 SYNOPSIS
+
+A model implementing the role JCOM::BM::DBICWrapper will automatically instanciate
+subclasses of this for any underlying DBIx::Class ResultSet.
+
+To implement your own factory containing your business code for the underlying
+DBIC resulsets, you need to subclass this.
+
+=head1 PROPERTIES
+
+dbic_rs : The original L<DBIx::Class::ResultSet>. Mandatory.
+bm : An object consuming the role L<JCOM::BM::DBICWrapper>. Mandatory.
+
+=cut
+
+has 'dbic_rs' => ( is => 'ro' , isa => 'DBIx::Class::ResultSet', required => 1 );
+has 'bm' => ( is => 'ro' , does => 'JCOM::BM::DBICWrapper' , required => 1 );
+
+=head2 create
+
+Creates a new object in the DBIC Schema and return it wrapped
+using the wrapper method.
+
+=cut
+
+sub create{
+    my ($self , $args) = @_;
+    return $self->wrap($self->dbic_rs->create($args));
+}
+
+=head2 find
+
+Finds an object in the DBIC schema and returns it wrapped
+using the wrapper method.
+
+=cut
+
+sub find{
+    my ($self , $args) = @_;
+    return $self->wrap($self->dbic_rs->find($args));
+}
+
+=head2 search
+
+Search objects in the DBIC Schema and returns a new intance
+of this factory.
+
+=cut
+
+sub search{
+    my ($self , @rest) = @_;
+    my $class = ref($self);
+    return $class->new({ dbic_rs => $self->dbic_rs->search_rs(@rest),
+			 bm => $self->bm()
+		       });
+}
+
+=head2 wrap
+
+Wraps an L<DBIx::Class::Row> in a business object. By default, it returns the
+Row itself.
+
+Override that in your subclasses of factories if you need to wrap some business code
+around the L<DBIx::Class::Row>
+
+=cut
+
+sub wrap{
+    my ($self , $o) = @_;
+    return $o;
+}
+
+1;
