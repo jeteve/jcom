@@ -11,3 +11,8 @@ JCOM-DB
   
    A Perl package that contains some database specific classes and role to use and to consume in
    your own database classes. At the moment, it's Postgresql oriented.
+
+JCOM-BM
+
+   A Perl package that contains some Business Model helper roles and classes to consume 
+   and use in your own business model.
