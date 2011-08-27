@@ -40,12 +40,12 @@ sub wrap{
 }
 1;
 
-package My::Model::Factory::AnotherProduct;
+package My::Model::Factory::ActiveProduct;
 use Moose;
 extends qw/My::Model::Factory::Product/;
 sub _build_dbic_rs{
     my ($self) = @_;
-    return $self->bm->jcom_schema->resultset('Product');
+    return $self->bm->jcom_schema->resultset('Product')->search_rs({ active => 1});
 }
 1;
 
@@ -56,7 +56,7 @@ ok( my $dbh = DBI->connect("dbi:SQLite::memory:" , "" , "") , "Ok connected as a
 ok( $dbh->{AutoCommit} = 1 , "Ok autocommit set");
 ok( $dbh->do("PRAGMA foreign_keys = ON") , "Ok set foreign keys");
 ok( $dbh->do('CREATE TABLE builder(id INTEGER PRIMARY KEY AUTOINCREMENT, bname VARCHAR(255) NOT NULL)') , "Ok creating builder table");
-ok( $dbh->do('CREATE TABLE product(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), builder_id INTEGER,FOREIGN KEY (builder_id) REFERENCES builder(id))') , "Ok creating product table");
+ok( $dbh->do('CREATE TABLE product(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), active BOOLEAN DEFAULT FALSE,  builder_id INTEGER,FOREIGN KEY (builder_id) REFERENCES builder(id))') , "Ok creating product table");
 
 ## Build a schema dynamically.
 ok( my $schema = My::Schema->connect(sub{ return $dbh ;} ), "Ok built schema with dbh");
@@ -70,7 +70,7 @@ ok( my $bm = My::Model->new({ jcom_schema => $schema }) , "Ok built a model");
 
 ## And test a few stuff.
 ok( my $pf = $bm->dbic_factory('Product') , "Ok got product factory");
-ok( my $pf2 = $bm->dbic_factory('AnotherProduct') , "Ok got another product factory");
+ok( my $pf2 = $bm->dbic_factory('ActiveProduct') , "Ok got another product factory");
 ok( my $bf = $bm->dbic_factory('Builder') , "Ok got builder factory");
 
 ## Object creation.
@@ -83,6 +83,11 @@ cmp_ok( $b->bname , 'eq' , 'Builder1' , "Good data");
 ok( my $p = $pf->create( { name => 'Hoover' , builder => $b }) , "Ok could make a product");
 ok( $p->id() , "Hoover product has got an ID");
 ok( $p->turn_on() , "Can be turned on as well");
-ok( my $p2 = $pf2->find($p->id()), "We can find the same product using the AnotherProduct factory");
+
+
+## Another product. This one is active
+ok( my $ap = $pf->create({ name => 'Kettle' , builder => $b , active => 1  }) , "Ok made an active product");
+ok( ! $pf2->find($p->id()), "We cannot find the first product because it's not active");
+ok( $pf2->find($ap->id()), "We can find the second product because it's active");
 
 done_testing();

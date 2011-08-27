@@ -54,7 +54,8 @@ using the wrapper method.
 
 sub find{
     my ($self , $args) = @_;
-    return $self->wrap($self->dbic_rs->find($args));
+    my $original = $self->dbic_rs->find($args);
+    return $original ? $self->wrap($original) : undef;
 }
 
 =head2 search
