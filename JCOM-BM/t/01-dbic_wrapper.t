@@ -40,6 +40,15 @@ sub wrap{
 }
 1;
 
+package My::Model::Factory::AnotherProduct;
+use Moose;
+extends qw/My::Model::Factory::Product/;
+sub _build_dbic_rs{
+    my ($self) = @_;
+    return $self->bm->jcom_schema->resultset('Product');
+}
+1;
+
 package main;
 
 ## Connect to a DB and dynamically build the DBIC model.
@@ -60,8 +69,9 @@ ok( $schema->resultset('Product') , "Product resultset is there");
 ok( my $bm = My::Model->new({ jcom_schema => $schema }) , "Ok built a model");
 
 ## And test a few stuff.
-ok( my $pf = $bm->jcom_factory('Product') , "Ok got product factory");
-ok( my $bf = $bm->jcom_factory('Builder') , "Ok got builder factory");
+ok( my $pf = $bm->dbic_factory('Product') , "Ok got product factory");
+ok( my $pf2 = $bm->dbic_factory('AnotherProduct') , "Ok got another product factory");
+ok( my $bf = $bm->dbic_factory('Builder') , "Ok got builder factory");
 
 ## Object creation.
 ok( my $b = $bf->create( { bname => 'Builder1' }) , "Ok built the first builder");
@@ -73,5 +83,6 @@ cmp_ok( $b->bname , 'eq' , 'Builder1' , "Good data");
 ok( my $p = $pf->create( { name => 'Hoover' , builder => $b }) , "Ok could make a product");
 ok( $p->id() , "Hoover product has got an ID");
 ok( $p->turn_on() , "Can be turned on as well");
+ok( my $p2 = $pf2->find($p->id()), "We can find the same product using the AnotherProduct factory");
 
 done_testing();
