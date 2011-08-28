@@ -69,7 +69,8 @@ sub search{
     my ($self , @rest) = @_;
     my $class = ref($self);
     return $class->new({ dbic_rs => $self->dbic_rs->search_rs(@rest),
-			 bm => $self->bm()
+			 bm => $self->bm(),
+			 name => $self->name()
 		       });
 }
 
@@ -86,6 +87,30 @@ around the L<DBIx::Class::Row>
 sub wrap{
     my ($self , $o) = @_;
     return $o;
+}
+
+=head1 next
+
+Returns next Business Object from this current DBIx::Resultset.
+
+=cut
+
+sub next{
+    my ($self) = @_;
+    my $next_o = $self->dbic_rs->next();
+    return undef unless $next_o;
+    return $self->wrap($next_o);
+}
+
+=head2 count
+
+Returns the number of objects in this ResultSet.
+
+=cut
+
+sub count{
+    my ($self) = @_;
+    return $self->dbic_rs->count();
 }
 
 1;

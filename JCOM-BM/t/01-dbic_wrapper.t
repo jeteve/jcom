@@ -28,6 +28,14 @@ sub turn_on{
     return "Turning on $self";
 }
 
+sub activate{
+    shift->o()->update({ active => 1});
+}
+
+sub deactivate{
+    shift->o()->update({ active => 0});
+}
+
 1;
 
 package My::Model::Factory::Product;
@@ -89,5 +97,30 @@ ok( $p->turn_on() , "Can be turned on as well");
 ok( my $ap = $pf->create({ name => 'Kettle' , builder => $b , active => 1  }) , "Ok made an active product");
 ok( ! $pf2->find($p->id()), "We cannot find the first product because it's not active");
 ok( $pf2->find($ap->id()), "We can find the second product because it's active");
+
+## Now some searching.
+ok( my $search_rs = $pf->search() , "Ok got a resultset");
+isa_ok( $search_rs , 'My::Model::Factory::Product' , "And its a Product factory");
+cmp_ok( $search_rs->count() , '==' , 2 ,  "Got two products");
+my $seen_p = 0;
+while( my $next_p = $search_rs->next() ){
+    $seen_p++;
+    isa_ok( $next_p , 'My::Model::O::Product' , "Ok next is a product");
+}
+cmp_ok( $seen_p , '==' , 2 , "Seen two products thanks to next");
+
+## Same thing on the active only products.
+ok( my $act_search = $pf2->search() , "Ok got active product search");
+isa_ok( $act_search , 'My::Model::Factory::Product' , "And its a Product factory");
+cmp_ok( $act_search->count() , '==' , 1 ,  "Got one product");
+$seen_p = 0;
+while( my $next_p = $act_search->next() ){
+    $seen_p++;
+    isa_ok( $next_p , 'My::Model::O::Product' , "Ok next is a product");
+}
+cmp_ok( $seen_p , '==' , 1 , "Seen one product thanks to next");
+
+$p->activate();
+cmp_ok( $pf2->search()->count() , '==' , 2 , "Now two products in the active resultset");
 
 done_testing();
