@@ -11,3 +11,6 @@ cover_db
 pod2htm*.tmp
 JCOM-BM-*
 **~
+**.bak
+Makefile.PL
+MYMETA.*

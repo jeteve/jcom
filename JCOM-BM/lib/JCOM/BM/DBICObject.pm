@@ -8,9 +8,13 @@ JCOM::BM::DBICObject - Base class for object containing business code around ano
 
 =head1 PROPERTIES
 
+=over
+
 =item bm
 
 The business model. Mandatory.
+
+=back
 
 =head1 EXAMPLE
 
