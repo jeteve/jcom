@@ -32,4 +32,5 @@ The business model. Mandatory.
 
 =cut
 
+__PACKAGE__->meta->make_immutable();
 1;

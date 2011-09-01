@@ -13,11 +13,10 @@ has 'jcom_schema' => ( is => 'ro' , isa => 'DBIx::Class::Schema' , required => 1
 has 'jcom_fact_baseclass' => ( is => 'ro' , isa => 'Str' , lazy_build => 1);
 
 has '_jcom_dbic_fact_classes' => ( is => 'ro' , isa => 'HashRef[Bool]' , lazy_build => 1); 
-has '_jcom_dbic_factories' => ( is => 'ro' , isa => 'HashRef[JCOM::BM::DBICFactory]' , default => sub{ {};});
 
 sub _build_jcom_fact_baseclass{
     my ($self) = @_;
-    return ref ($self).'::Factory';
+    return ref ($self).'::DBICFactory';
 }
 
 sub _build__jcom_dbic_fact_classes{
@@ -41,7 +40,7 @@ sub _build__jcom_dbic_fact_classes{
 
 =head2 dbic_factory
 
-Returns a L<JCOM::BM::Factory> that wraps around the given DBIC ResultSet name.
+Returns a new instance of L<JCOM::BM::Factory> that wraps around the given DBIC ResultSet name.
 
 usage:
 
@@ -52,21 +51,18 @@ usage:
 sub dbic_factory{
     my ($self , $name) = @_;
     
-    if( my $f =  $self->_jcom_dbic_factories->{$name} ){
-	return $f; # That's it.
-    }
-
     my $class_name = $self->jcom_fact_baseclass().'::'.$name;
+
+    ## Build a class dynamically if necessary
     unless( $self->_jcom_dbic_fact_classes->{$class_name} ){
 	## We need to build such a class.
-	$class_name = $self->jcom_fact_baseclass().'::Dynamic::'.$name;
 	Moose::Meta::Class->create($class_name => ( superclasses => [ 'JCOM::BM::DBICFactory' ] ));
 	$self->_jcom_dbic_fact_classes->{$class_name} = 1;
     }
-    ## Ok, $class_name is now built
-    ## Cache and return an instance of it.
+    ## Ok, $class_name is now there
+
     ## Note that the factory will built its own resultset from this model and the name
-    return $self->_jcom_dbic_factories->{$name} = $class_name->new({  bm => $self , name => $name });
+    return  $class_name->new({  bm => $self , name => $name });
 }
 
 1;

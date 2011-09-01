@@ -17,6 +17,9 @@ __PACKAGE__->naming('current');
 package My::Model;
 use Moose;
 with qw/JCOM::BM::DBICWrapper/;
+
+has  'colour' => ( is => 'rw' , isa => 'Str' , default => 'green' , required => 1 );
+
 1;
 
 package My::Model::O::Product;
@@ -38,7 +41,7 @@ sub deactivate{
 
 1;
 
-package My::Model::Factory::Product;
+package My::Model::DBICFactory::Product;
 use Moose;
 extends  qw/JCOM::BM::DBICFactory/ ;
 
@@ -48,12 +51,22 @@ sub wrap{
 }
 1;
 
-package My::Model::Factory::ActiveProduct;
+package My::Model::DBICFactory::ActiveProduct;
 use Moose;
-extends qw/My::Model::Factory::Product/;
+extends qw/My::Model::DBICFactory::Product/;
 sub _build_dbic_rs{
     my ($self) = @_;
     return $self->bm->jcom_schema->resultset('Product')->search_rs({ active => 1});
+}
+1;
+
+package My::Model::DBICFactory::ColouredProduct;
+use Moose;
+extends qw/My::Model::DBICFactory::Product/;
+sub _build_dbic_rs{
+    my ($self) = @_;
+    my $bm = $self->bm();
+    return $bm->jcom_schema->resultset('Product')->search_rs({ colour => $bm->colour() });
 }
 1;
 
@@ -64,7 +77,7 @@ ok( my $dbh = DBI->connect("dbi:SQLite::memory:" , "" , "") , "Ok connected as a
 ok( $dbh->{AutoCommit} = 1 , "Ok autocommit set");
 ok( $dbh->do("PRAGMA foreign_keys = ON") , "Ok set foreign keys");
 ok( $dbh->do('CREATE TABLE builder(id INTEGER PRIMARY KEY AUTOINCREMENT, bname VARCHAR(255) NOT NULL)') , "Ok creating builder table");
-ok( $dbh->do('CREATE TABLE product(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), active BOOLEAN DEFAULT FALSE,  builder_id INTEGER,FOREIGN KEY (builder_id) REFERENCES builder(id))') , "Ok creating product table");
+ok( $dbh->do('CREATE TABLE product(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), active BOOLEAN DEFAULT FALSE, colour VARCHAR(10) NOT NULL DEFAULT \'blue\', builder_id INTEGER,FOREIGN KEY (builder_id) REFERENCES builder(id))') , "Ok creating product table");
 
 ## Build a schema dynamically.
 ok( my $schema = My::Schema->connect(sub{ return $dbh ;} ), "Ok built schema with dbh");
@@ -94,13 +107,14 @@ ok( $p->turn_on() , "Can be turned on as well");
 
 
 ## Another product. This one is active
-ok( my $ap = $pf->create({ name => 'Kettle' , builder => $b , active => 1  }) , "Ok made an active product");
+## Note that it's created via the ActiveProduct resultset.
+ok( my $ap = $pf2->create({ name => 'Kettle' , builder => $b , active => 1  }) , "Ok made an active product");
 ok( ! $pf2->find($p->id()), "We cannot find the first product because it's not active");
 ok( $pf2->find($ap->id()), "We can find the second product because it's active");
 
 ## Now some searching.
 ok( my $search_rs = $pf->search() , "Ok got a resultset");
-isa_ok( $search_rs , 'My::Model::Factory::Product' , "And its a Product factory");
+isa_ok( $search_rs , 'My::Model::DBICFactory::Product' , "And its a Product factory");
 cmp_ok( $search_rs->count() , '==' , 2 ,  "Got two products");
 my $seen_p = 0;
 while( my $next_p = $search_rs->next() ){
@@ -111,7 +125,7 @@ cmp_ok( $seen_p , '==' , 2 , "Seen two products thanks to next");
 
 ## Same thing on the active only products.
 ok( my $act_search = $pf2->search() , "Ok got active product search");
-isa_ok( $act_search , 'My::Model::Factory::Product' , "And its a Product factory");
+isa_ok( $act_search , 'My::Model::DBICFactory::Product' , "And its a Product factory");
 cmp_ok( $act_search->count() , '==' , 1 ,  "Got one product");
 $seen_p = 0;
 while( my $next_p = $act_search->next() ){
@@ -122,5 +136,14 @@ cmp_ok( $seen_p , '==' , 1 , "Seen one product thanks to next");
 
 $p->activate();
 cmp_ok( $pf2->search()->count() , '==' , 2 , "Now two products in the active resultset");
+
+
+## Now some colour testing
+{
+    ok( my $cr = $bm->dbic_factory('ColouredProduct') , "Ok coloured product resultset");
+    cmp_ok( $cr->count() , '==' , 0 , "No coloured in green product found");
+    $bm->colour('blue');
+    cmp_ok( $bm->dbic_factory('ColouredProduct')->count() , '==' , 2 , 'Now two coloured product');
+}
 
 done_testing();
