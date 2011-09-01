@@ -89,7 +89,7 @@ sub wrap{
     return $o;
 }
 
-=head1 next
+=head2 next
 
 Returns next Business Object from this current DBIx::Resultset.
 
@@ -113,4 +113,6 @@ sub count{
     return $self->dbic_rs->count();
 }
 
+
+__PACKAGE__->meta->make_immutable();
 1;
