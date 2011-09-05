@@ -1,6 +1,6 @@
 package JCOM::BM::DBICObject;
 use Moose;
-has 'bm' => ( does => 'JCOM::BM::DBICWrapper' , required => 1 , is => 'ro' );
+has 'factory' => ( isa => 'JCOM::BM::DBICFactory' , required => 1 , is => 'ro' );
 
 =head1 NAME
 

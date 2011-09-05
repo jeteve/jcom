@@ -47,7 +47,7 @@ extends  qw/JCOM::BM::DBICFactory/ ;
 
 sub wrap{
     my ($self , $o) = @_;
-    return My::Model::O::Product->new({o => $o , bm => $self->bm() });
+    return My::Model::O::Product->new({o => $o , factory => $self });
 }
 1;
 
