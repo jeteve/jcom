@@ -129,6 +129,9 @@ sub register_column{
 
 sub _jcom_encrypt_column{
     my ($self, $value) = @_;
+    unless(defined $value){
+      return undef;
+    }
     return $self->_jcom_build_cypher->encrypt( Data => $value,
 					  Passphrase => $self->_jcom_get_sym_key(),
 					  Armour => 1,
@@ -137,6 +140,9 @@ sub _jcom_encrypt_column{
 
 sub _jcom_decrypt_column{
     my ($self, $value) = @_;
+    unless(defined $value){
+      return undef;
+    }
     return $self->_jcom_build_cypher->decrypt( Data => $value,
 					  Passphrase => $self->_jcom_get_sym_key(),
 					);

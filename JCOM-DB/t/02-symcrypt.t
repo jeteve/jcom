@@ -63,7 +63,7 @@ $schema->storage->dbh_do(
     sub {
 	my ($storage, $dbh, @cols) = @_;
 	$dbh->do('DROP TABLE IF EXISTS test_arow');
-	$dbh->do("CREATE TABLE test_arow(id SERIAL,a TEXT NOT NULL, b TEXT)");
+	$dbh->do("CREATE TABLE test_arow(id SERIAL,a TEXT, b TEXT)");
     });
 
 ## We need to do this, because our ARow class is in the same file.
@@ -86,6 +86,14 @@ my $unistr = "\x{00B5}\x{03A9}";
     ok( my $rt_row = $schema->resultset('ARow')->find($row->id()) , "Ok Found it in the DB");
     cmp_ok( $rt_row->a() , 'eq' , $unistr , "Retrieved string is correct");
     ok( utf8::is_utf8($rt_row->a()) , "And is utf8");
+}
+
+{
+  ## Now test a null value
+  ok($row->update({ a => undef }) , "Ok updating to a null value");
+  ## Round trip
+  ok( my $rt_row = $schema->resultset('ARow')->find($row->id()) , "Ok Found it in the DB");
+  ok(! defined $rt_row->a() , "NULL turns to undefined");
 }
 
 {
