@@ -1,5 +1,6 @@
 Build.PL
 Changes
+lib/JCOM/Sequence.pm
 lib/JCOM/BM.pm
 lib/JCOM/BM/DBICFactory.pm
 lib/JCOM/BM/DBICObject.pm
@@ -11,6 +12,7 @@ META.yml
 README
 t/00-load.t
 t/01-dbic_wrapper.t
+t/02-sequence.t
 t/boilerplate.t
 t/manifest.t
 t/pod-coverage.t
