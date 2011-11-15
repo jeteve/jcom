@@ -1,11 +1,12 @@
 package JCOM::Form;
-
-use warnings;
-use strict;
+use Moose;
+use Class::MOP;
+use JCOM::Form::Field;
+use JCOM::Form::Field::String;
 
 =head1 NAME
 
-JCOM::Form - The great new JCOM::Form!
+JCOM::Form - A Moose base class for Form implementation
 
 =head1 VERSION
 
@@ -15,38 +16,82 @@ Version 0.01
 
 our $VERSION = '0.01';
 
+has 'fields' => ( isa => 'ArrayRef[JCOM::Form::Field]', is => 'ro' , required => 1 , default => sub{ [] } );
+has '_fields_idx' => ( isa => 'HashRef[Int]', is => 'ro' , required => 1, default => sub{ {} } );
+has '_field_next_num' => ( isa => 'Int' , is => 'rw' , default => 0 , required => 1 );
 
-=head1 SYNOPSIS
+=head2 add_field
 
-Quick summary of what the module does.
+Usage:
 
-Perhaps a little code snippet.
-
-    use JCOM::Form;
-
-    my $foo = JCOM::Form->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
+   $this->add_field('field_name');
+   $this->add_field('FieldType', 'field_name');
+   $this->add_field($field_instance);
 
 =cut
 
-sub function1 {
+sub add_field{
+  my ($self, @rest)  = @_;
+
+  my $field = shift @rest;
+  if( ( ref( $field ) // '' ) eq 'HASH' && $field->isa('JCOM::Form::Field') ){
+    return $self->_add_field($field);
+  }
+  if( ref( $field ) ){ confess("Argument $field not supported") ; }
+
+  ## Field is not a ref at this point.
+  my $name = shift @rest;
+  ## defaut is to be a string.
+  unless( $name ){ $name = $field , $field = 'String' ; }
+
+  ## Try to load classes.
+  my $ret;
+  eval{
+    my $f_class = 'JCOM::Form::Field::'.$field ;
+    Class::MOP::load_class( $f_class );
+    $ret =  $self->_add_field($f_class->new({ form => $self , name => $name  }));
+  };
+  unless( $@ ){ return $ret; }
+
+  eval{
+    iClass::MOP::load_class( $field );
+    $ret = $self->_add_field($field->new({ form => $self , name =>  $name  }));
+  };
+  unless( $@ ){ return $ret; }
+
+  confess("Class $field is invalid: $@");
 }
 
-=head2 function2
+sub _add_field{
+  my ($self , $field ) = @_;
+  $field //= '';
+  unless( ref($field) && $field->isa('JCOM::Form::Field') ){ confess("Please give a JCOM::Form::Field, not a $field"); }
+
+  if( $self->field($field->name()) ){
+    confess("A field named '".$field->name()."' already exists in this form");
+  }
+
+  push @{$self->fields()} , $field;
+  ## set the index
+  $self->_fields_idx->{$field->name()} = $self->_field_next_num();
+
+
+  $self->_field_next_num($self->_field_next_num() + 1);
+  return $field;
+}
+
+=head2 field
+
+Get a field by name or undef.
 
 =cut
 
-sub function2 {
+sub field{
+  my ($self, $name) = @_;
+  my $idx = $self->_fields_idx->{$name};
+  return defined $idx ? $self->fields->[$idx] : undef;
 }
+
 
 =head1 AUTHOR
 
@@ -107,4 +152,5 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
+__PACKAGE__->meta->make_immutable();
 1; # End of JCOM::Form
