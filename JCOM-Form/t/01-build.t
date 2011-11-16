@@ -1,5 +1,6 @@
 #!perl -T
 use Test::More;
+use Test::Exception;
 use JCOM::Form;
 use DateTime;
 
@@ -16,5 +17,6 @@ ok( $f->add_field('Date' , 'field_date') , "Ok added date field");
 ok( $f->field('field_date')->value(DateTime->now()), "Ok can set value");
 
 
-done_testing();
+dies_ok(sub{ $f->add_field('field1'); } , "Cannot add twice the same field");
 
+done_testing();

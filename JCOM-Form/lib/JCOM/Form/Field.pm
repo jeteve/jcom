@@ -12,5 +12,13 @@ has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 );
 
 has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
 
+sub short_class{
+  my ($self) = @_;
+  my $class = ref($self) || $self;
+  $class =~ s/^JCOM::Form::Field:://;
+  $class =~ s/\W+/_/g;
+  return $class;
+}
+
 __PACKAGE__->meta->make_immutable();
 1;
