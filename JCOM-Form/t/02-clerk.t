@@ -15,10 +15,16 @@ foreach my $field ( @{$f->fields() }){
 }
 ok( my $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => '2011-10-10' } ) );
 ok( $clerk->fill_form($f) , "Ok the clerk can fill the form" );
+$f->clear();
+
+
 
 ok( $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => 'BAD_DATE_STRING' } ) );
 ok( $clerk->fill_form($f) , "Ok the clerk can fill the form" );
 ok( $f->has_errors() , "Form has errors");
+$f->clear();
+ok( ! $f->has_errors() , "Form has no errors after clear");
+
 
 
 done_testing();

@@ -10,7 +10,7 @@ JCOM::Form::Field::Date - A single DateTime field.
 
 =cut
 
-has 'value' => ( is => 'DateTime' , is => 'rw' );
+has '+value' => ( isa => 'DateTime' );
 
 __PACKAGE__->meta->make_immutable();
 1;

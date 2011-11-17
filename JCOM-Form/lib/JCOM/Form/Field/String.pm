@@ -9,7 +9,7 @@ JCOM::Form::Field::String - A Pure and single string field.
 
 =cut
 
-has 'value' => ( is => 'Str' , is => 'rw' );
+has '+value' => ( isa => 'Str' );
 
 __PACKAGE__->meta->make_immutable();
 1;

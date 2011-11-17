@@ -11,6 +11,7 @@ has 'form' => ( isa => 'JCOM::Form' , is => 'ro' , weak_ref => 1 , required => 1
 has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 );
 
 has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
+has 'value' => ( is => 'rw' , clearer => 'clear_value' );
 
 sub short_class{
   my ($self) = @_;
@@ -28,6 +29,12 @@ sub add_error{
 sub has_errors{
   my ($self) = @_;
   return scalar(@{$self->errors()});
+}
+
+sub clear{
+  my ($self) = @_;
+  $self->errors([]);
+  $self->clear_value();
 }
 
 __PACKAGE__->meta->make_immutable();

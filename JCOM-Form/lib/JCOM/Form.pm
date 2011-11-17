@@ -1,6 +1,9 @@
 package JCOM::Form;
 use Moose;
 use Class::MOP;
+
+use JCOM::Sequence;
+
 use JCOM::Form::Field;
 use JCOM::Form::Field::String;
 
@@ -15,7 +18,10 @@ Version 0.01
 =cut
 
 our $VERSION = '0.01';
+my $FORMSEQ = JCOM::Sequence->new();
 
+
+has 'id' => ( isa => 'Str' , is => 'ro' , required => 1 , default => sub{ 'form_'.$FORMSEQ->next() } );
 has 'fields' => ( isa => 'ArrayRef[JCOM::Form::Field]', is => 'ro' , required => 1 , default => sub{ [] } );
 has '_fields_idx' => ( isa => 'HashRef[Int]', is => 'ro' , required => 1, default => sub{ {} } );
 has '_field_next_num' => ( isa => 'Int' , is => 'rw' , default => 0 , required => 1 );
@@ -84,6 +90,10 @@ sub _add_field{
 
 Get a field by name or undef.
 
+Usage:
+
+  my $field = $this->field('my_field');
+
 =cut
 
 sub field{
@@ -92,11 +102,34 @@ sub field{
   return defined $idx ? $self->fields->[$idx] : undef;
 }
 
+=head2 has_errors
+
+Returns true if this form has errors, false otherwise.
+
+Usage:
+
+  if( $this->has_errors() ){
+    ...
+  }
+
+=cut
+
 sub has_errors{
   my ($self) = @_;
   return grep { $_->has_errors }  @{$self->fields()};
 }
 
+=head2 clear
+
+Resets this form to its void state. After the call, this form is
+ready to be used again.
+
+=cut
+
+sub clear{
+  my ($self) = @_;
+  map{ $_->clear() } @{$self->fields()};
+}
 
 =head1 AUTHOR
 
