@@ -22,7 +22,12 @@ sub _fill_field_Date{
   my ($self , $field) = @_;
   # Grab the date from the hash.
   if( my $date_str = $self->source->{$field->name()} ){
-    $field->value($self->_date_parser()->parse_datetime($date_str));
+    eval{
+      $field->value($self->_date_parser()->parse_datetime($date_str));
+    };
+    if( $@ ){
+      $field->add_error("Invalid date format in $date_str. Please use something like 2011-11-20");
+    }
   }
 }
 

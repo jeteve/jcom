@@ -20,5 +20,15 @@ sub short_class{
   return $class;
 }
 
+sub add_error{
+  my ($self , $err_str) = @_;
+  push @{$self->errors()} , $err_str;
+}
+
+sub has_errors{
+  my ($self) = @_;
+  return scalar(@{$self->errors()});
+}
+
 __PACKAGE__->meta->make_immutable();
 1;

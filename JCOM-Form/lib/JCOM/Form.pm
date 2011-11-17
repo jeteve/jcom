@@ -92,6 +92,11 @@ sub field{
   return defined $idx ? $self->fields->[$idx] : undef;
 }
 
+sub has_errors{
+  my ($self) = @_;
+  return grep { $_->has_errors }  @{$self->fields()};
+}
+
 
 =head1 AUTHOR
 
