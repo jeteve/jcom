@@ -11,8 +11,9 @@ sub fill_form{
   my ($self, $form) = @_;
 
   foreach my $field ( @{$form->fields()} ){
-    my $m = '_fill_field_'.$field->short_class();
+    my $m = '_fill_field_'.$field->meta->short_class();
     $self->$m($field);
+    $field->validate();
   }
   return $form;
 }
@@ -28,6 +29,8 @@ sub _fill_field_Date{
     if( $@ ){
       $field->add_error("Invalid date format in $date_str. Please use something like 2011-11-20");
     }
+  }else{
+    $field->clear_value();
   }
 }
 
@@ -36,6 +39,8 @@ sub _fill_field_String{
   my $str = $self->source->{$field->name()};
   if( defined $str ){
     $field->value($str);
+  }else{
+    $field->clear_value();
   }
 }
 

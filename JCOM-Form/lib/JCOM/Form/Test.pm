@@ -1,5 +1,6 @@
 package JCOM::Form::Test;
 use Moose;
+use Moose::Util qw/apply_all_roles/;
 use Class::MOP;
 use Module::Pluggable::Object;
 
@@ -11,8 +12,6 @@ JCOM::Form::Test - A Test form containing all the supported native field types.
 
 extends qw/JCOM::Form/;
 
-has '+fields' => ( 'default' => sub{ shift->build_fields() } );
-
 sub build_fields{
   my ($self) = @_;
 
@@ -20,9 +19,14 @@ sub build_fields{
   my $mp = Module::Pluggable::Object->new( search_path => 'JCOM::Form::Field' );
   foreach my $field_class ( $mp->plugins() ){
     Class::MOP::load_class($field_class);
-    push @res, $field_class->new( name => 'field_' . $field_class->short_class() , form => $self );
+    warn "Loaded $field_class";
+    $self->add_field($field_class.'' , 'field_'.$field_class->meta->short_class() );
   }
-  return \@res;
+
+  ## Add a mandatory field.
+  my $field = JCOM::Form::Field::String->new({ name => 'mandatory_str' , form => $self });
+  apply_all_roles($self->add_field($field) , 'JCOM::Form::FieldRole::Mandatory' );
+  $field->meta->short_class('String');
 }
 
 __PACKAGE__->meta->make_immutable();

@@ -12,5 +12,6 @@ JCOM::Form::Field::Date - A single DateTime field.
 
 has '+value' => ( isa => 'DateTime' );
 
+__PACKAGE__->meta->short_class('Date');
 __PACKAGE__->meta->make_immutable();
 1;

@@ -14,6 +14,7 @@ ok( $f->field('field2')->isa('JCOM::Form::Field::String') , "Ok field2 is a stri
 ok( $f->field('field2')->value('Bla') , "Ok can set value on f2");
 
 ok( $f->add_field('Date' , 'field_date') , "Ok added date field");
+ok( $f->add_field('JCOM::Form::Field::Date' , 'field_date_2')  , "Ok added another field date");
 ok( $f->field('field_date')->value(DateTime->now()), "Ok can set value");
 
 ok( $f->add_field( JCOM::Form::Field::String->new({ form => $f , name => 'field3'})) , "Can add an instance");

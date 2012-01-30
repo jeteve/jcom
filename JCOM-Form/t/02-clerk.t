@@ -22,6 +22,7 @@ $f->clear();
 ok( $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => 'BAD_DATE_STRING' } ) );
 ok( $clerk->fill_form($f) , "Ok the clerk can fill the form" );
 ok( $f->has_errors() , "Form has errors");
+ok( $f->field('mandatory_str')->has_errors() , "Ok mandatory string has errors!");
 $f->clear();
 ok( ! $f->has_errors() , "Form has no errors after clear");
 

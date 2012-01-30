@@ -11,5 +11,6 @@ JCOM::Form::Field::String - A Pure and single string field.
 
 has '+value' => ( isa => 'Str' );
 
+__PACKAGE__->meta->short_class('String');
 __PACKAGE__->meta->make_immutable();
 1;

@@ -26,6 +26,36 @@ has 'fields' => ( isa => 'ArrayRef[JCOM::Form::Field]', is => 'ro' , required =>
 has '_fields_idx' => ( isa => 'HashRef[Int]', is => 'ro' , required => 1, default => sub{ {} } );
 has '_field_next_num' => ( isa => 'Int' , is => 'rw' , default => 0 , required => 1 );
 
+=head2 BUILD
+
+Hooks in the Moose BUILD to call build_fields
+
+=cut
+
+sub BUILD{
+  my ($self) = @_;
+  $self->build_fields();
+}
+
+=head2 build_fields
+
+Called after Form creation to add_field to $self.
+
+This should be the method you need to implement in your subclasses.
+
+Usage:
+
+  sub build_fields{
+    my ($self) = @_;
+    $self->add_field('Date' , 'a_date_field');
+    $self->add_field('String' , 'a string field');
+    # etc..
+  }
+
+=cut
+
+sub build_fields{}
+
 =head2 add_field
 
 Usage:
@@ -40,7 +70,7 @@ sub add_field{
   my ($self, @rest)  = @_;
 
   my $field = shift @rest;
-  if( ( ref( $field ) // {} ) ne 'HASH' && $field->isa('JCOM::Form::Field') ){
+  if( ref($field) && $field->isa('JCOM::Form::Field') ){
     return $self->_add_field($field);
   }
   if( ref( $field ) ){ confess("Argument $field not supported") ; }
@@ -53,9 +83,10 @@ sub add_field{
   ## Try to load classes.
   my $ret;
   eval{
-    my $f_class = 'JCOM::Form::Field::'.$field ;
+    my $f_class = ( $field =~ /^JCOM::Form::Field/ ) ? $field : 'JCOM::Form::Field::'.$field;
     Class::MOP::load_class( $f_class );
-    $ret =  $self->_add_field($f_class->new({ form => $self , name => $name  }));
+    my $new_instance = $f_class->new({ form => $self , name => $name  });
+    $ret =  $self->_add_field($new_instance);
   };
   unless( $@ ){ return $ret; }
 
@@ -65,7 +96,7 @@ sub add_field{
 sub _add_field{
   my ($self , $field ) = @_;
   $field //= '';
-  unless( ref($field) && $field->isa('JCOM::Form::Field') ){ confess("Please give a JCOM::Form::Field, not a $field"); }
+  unless( ref($field) && $field->isa('JCOM::Form::Field') ){ confess("Please give a JCOM::Form::Field Instance, not a $field"); }
 
   if( $self->field($field->name()) ){
     confess("A field named '".$field->name()."' already exists in this form");
@@ -74,8 +105,6 @@ sub _add_field{
   push @{$self->fields()} , $field;
   ## set the index
   $self->_fields_idx->{$field->name()} = $self->_field_next_num();
-
-
   $self->_field_next_num($self->_field_next_num() + 1);
   return $field;
 }
