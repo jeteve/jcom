@@ -40,7 +40,7 @@ sub add_field{
   my ($self, @rest)  = @_;
 
   my $field = shift @rest;
-  if( ( ref( $field ) // '' ) eq 'HASH' && $field->isa('JCOM::Form::Field') ){
+  if( ( ref( $field ) // {} ) ne 'HASH' && $field->isa('JCOM::Form::Field') ){
     return $self->_add_field($field);
   }
   if( ref( $field ) ){ confess("Argument $field not supported") ; }
@@ -56,12 +56,6 @@ sub add_field{
     my $f_class = 'JCOM::Form::Field::'.$field ;
     Class::MOP::load_class( $f_class );
     $ret =  $self->_add_field($f_class->new({ form => $self , name => $name  }));
-  };
-  unless( $@ ){ return $ret; }
-
-  eval{
-    iClass::MOP::load_class( $field );
-    $ret = $self->_add_field($field->new({ form => $self , name =>  $name  }));
   };
   unless( $@ ){ return $ret; }
 
