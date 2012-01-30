@@ -1,5 +1,6 @@
 package JCOM::Form::Field;
 use Moose -traits => 'JCOM::Form::Meta::Class::Trait::HasShortClass';
+use Moose::Util qw/apply_all_roles/;
 
 __PACKAGE__->meta->short_class('GenericField');
 
@@ -36,6 +37,17 @@ sub clear{
   my ($self) = @_;
   $self->errors([]);
   $self->clear_value();
+}
+
+sub add_role{
+  my ($self , $role) = @_;
+  ## Maintain important meta attributes.
+  my $short_class = $self->meta->short_class();
+  apply_all_roles($self , $role );
+
+  ## Maintain important meta attributes.
+  $self->meta->short_class($short_class);
+  return $self;
 }
 
 #__PACKAGE__->meta->make_immutable();
