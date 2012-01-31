@@ -61,7 +61,7 @@ sub build_fields{}
 Usage:
 
    $this->add_field('field_name');
-   $this->add_field('FieldType', 'field_name');
+   $this->add_field('FieldType', 'field_name'); ## 'FieldType' is turned into JCOM::Form::Field::FieldType'.
    $this->add_field($field_instance);
 
 =cut
@@ -83,7 +83,12 @@ sub add_field{
   ## Try to load classes.
   my $ret;
   eval{
-    my $f_class = ( $field =~ /^JCOM::Form::Field/ ) ? $field : 'JCOM::Form::Field::'.$field;
+    my $f_class = $field;
+    if( $f_class =~ /^\+/ ){
+      $f_class =~ s/^\+//;
+    }else{
+      $f_class = 'JCOM::Form::Field::'.$f_class;
+    }
     Class::MOP::load_class( $f_class );
     my $new_instance = $f_class->new({ form => $self , name => $name  });
     $ret =  $self->_add_field($new_instance);

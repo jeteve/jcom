@@ -41,6 +41,13 @@ sub clear{
 
 sub add_role{
   my ($self , $role) = @_;
+
+  if( $role =~ /^\+/ ){
+    $role =~ s/^\+//;
+  }else{
+    $role = 'JCOM::Form::FieldRole::'.$role;
+  }
+
   ## Maintain important meta attributes.
   my $short_class = $self->meta->short_class();
   apply_all_roles($self , $role );

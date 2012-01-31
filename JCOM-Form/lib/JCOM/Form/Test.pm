@@ -18,17 +18,17 @@ sub build_fields{
   my $mp = Module::Pluggable::Object->new( search_path => 'JCOM::Form::Field' );
   foreach my $field_class ( $mp->plugins() ){
     Class::MOP::load_class($field_class);
-    $self->add_field($field_class.'' , 'field_'.$field_class->meta->short_class() );
+    $self->add_field('+'.$field_class , 'field_'.$field_class->meta->short_class() );
   }
 
   ## Add a mandatory field.
   my $field = JCOM::Form::Field::String->new({ name => 'mandatory_str' , form => $self });
   $self->add_field($field);
-  $field->add_role('JCOM::Form::FieldRole::Mandatory');
+  $field->add_role('Mandatory');
 
   $field = JCOM::Form::Field::String->new({ name => 'mandatory_and_long' , form => $self });
   $self->add_field($field);
-  $field->add_role('JCOM::Form::FieldRole::Mandatory')->add_role('JCOM::Form::FieldRole::MinLength')->min_length(3);
+  $field->add_role('+JCOM::Form::FieldRole::Mandatory')->add_role('MinLength')->min_length(3);
 
   #$field->meta->short_class('String');
 }
