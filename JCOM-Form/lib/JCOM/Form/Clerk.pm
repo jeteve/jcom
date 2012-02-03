@@ -13,6 +13,16 @@ A Clerk knows how to fill a form from the input it expects.
 
 =cut
 
+=head2 fill_form
+
+Fill the given form from the given source.
+
+Usage:
+
+  $this->fill_form($form);
+
+=cut
+
 sub fill_form{
   my ($self , $form) = @_;
   confess "Please implement this";

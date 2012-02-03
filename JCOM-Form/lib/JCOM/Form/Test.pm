@@ -11,6 +11,12 @@ JCOM::Form::Test - A Test form containing all the supported native field types.
 
 extends qw/JCOM::Form/;
 
+=head2 build_fields
+
+See super class L<JCOM::Form>
+
+=cut
+
 sub build_fields{
   my ($self) = @_;
 

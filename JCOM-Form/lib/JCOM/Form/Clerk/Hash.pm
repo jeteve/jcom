@@ -4,8 +4,22 @@ use DateTime::Format::ISO8601;
 
 extends qw/JCOM::Form::Clerk/;
 
+=head1 NAME
+
+JCOM::Form::Clerk::Hash - A Clerk that will fill a form from a hash of values.
+
+=cut
+
 has '+source' => ( isa => 'HashRef' );
 has '_date_parser' => ( is => 'ro' , default => sub{ DateTime::Format::ISO8601->new() });
+
+=head2 fill_form
+
+Fills the given form with values from the source hash.
+
+See superclass L<JCOM::Form::Clerk> for details.
+
+=cut
 
 sub fill_form{
   my ($self, $form) = @_;

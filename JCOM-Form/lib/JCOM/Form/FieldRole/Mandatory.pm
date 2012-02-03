@@ -1,7 +1,12 @@
 package JCOM::Form::FieldRole::Mandatory;
 use Moose::Role;
+with qw/JCOM::Form::FieldRole/;
 
-requires 'validate';
+=head1 NAME
+
+JCOM::Form::FieldRole::Mandatory - A Role that makes the field mandatory
+
+=cut
 
 after 'validate' => sub{
   my ($self) = @_;

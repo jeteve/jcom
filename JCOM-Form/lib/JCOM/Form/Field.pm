@@ -15,10 +15,22 @@ has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 );
 has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
 has 'value' => ( is => 'rw' , clearer => 'clear_value' );
 
+=head2 add_error
+
+Adds an error string to this field.
+
+=cut
+
 sub add_error{
   my ($self , $err_str) = @_;
   push @{$self->errors()} , $err_str;
 }
+
+=head2 has_errors
+
+Returns the number of errors in this form.
+
+=cut
 
 sub has_errors{
   my ($self) = @_;
@@ -33,11 +45,23 @@ Does nothing. Can be extended by roles.
 
 sub validate{}
 
+=head2 clear
+
+Resets this field value and errors
+
+=cut
+
 sub clear{
   my ($self) = @_;
   $self->errors([]);
   $self->clear_value();
 }
+
+=head2 add_role
+
+Adds a Subrole of L<JCOM::Form::FieldRole> or a custom defined FormRole.
+
+=cut
 
 sub add_role{
   my ($self , $role) = @_;
