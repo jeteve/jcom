@@ -38,6 +38,24 @@ sub BUILD{
   $self->build_fields();
 }
 
+=head2 do_accept
+
+Accepts a form visitor returns this visitor's visit_form method returned value.
+
+Usage:
+
+  my $result = $this->do_accept($visitor);
+
+=cut
+
+sub do_accept{
+  my ($self, $visitor) = @_;
+  unless( $visitor->can('visit_form') ){
+    confess("Visitor $visitor cannot 'visit_form'");
+  }
+  return $visitor->visit_form($self);
+}
+
 =head2 build_fields
 
 Called after Form creation to add_field to $self.

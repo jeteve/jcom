@@ -15,13 +15,24 @@ has '_date_parser' => ( is => 'ro' , default => sub{ DateTime::Format::ISO8601->
 
 =head2 fill_form
 
+Fills the form.
+
+=cut
+
+sub fill_form{
+  my ($self , $form) = @_;
+  $form->do_accept($self);
+}
+
+=head2 visit_form
+
 Fills the given form with values from the source hash.
 
 See superclass L<JCOM::Form::Clerk> for details.
 
 =cut
 
-sub fill_form{
+sub visit_form{
   my ($self, $form) = @_;
 
   foreach my $field ( @{$form->fields()} ){
