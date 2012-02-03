@@ -11,9 +11,22 @@ JCOM::Form::Field - A field for JCOM::Form s
 =cut
 
 has 'form' => ( isa => 'JCOM::Form' , is => 'ro' , weak_ref => 1 , required => 1 );
+has 'label' => ( isa => 'Str', is => 'rw' , required => 1 , default => '' );
 has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 );
 has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
 has 'value' => ( is => 'rw' , clearer => 'clear_value' );
+
+=head2 set_label
+
+Chainable label method.
+
+=cut
+
+sub set_label{
+  my ($self , $label) = @_;
+  $self->label($label);
+  return $self;
+}
 
 =head2 add_error
 

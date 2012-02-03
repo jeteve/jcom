@@ -43,4 +43,20 @@ ok( ! $f->field('mandatory_and_long')->has_errors() , "Ok mandatory and long is 
 $f->clear();
 ok( ! $f->has_errors() , "Form has no errors after clear");
 
+## Add a field that would be a repeat of the mandatory_str.
+$f->add_field('String' , 'repeat_mand')->add_role('Repeat')->repeat_field($f->field('mandatory_and_long'));
+$clerk->fill_form($f);
+ok( $f->field('repeat_mand')->has_errors() , "Ok repeat_field has errors");
+ok( $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => '1977-10-20',
+                                                       mandatory_str => 'Something',
+                                                       mandatory_and_long => 'SJISJISJJ',
+                                                       repeat_mand => 'SJISJISJJ'
+                                                     } ) );
+$f->clear();
+ok( ! $f->has_errors() );
+
+$clerk->fill_form($f);
+ok( ! $f->has_errors() , "Ok no global form errors");
+ok( ! $f->field('repeat_mand')->has_errors() , "Ok repeat field is ok" );
+
 done_testing();
