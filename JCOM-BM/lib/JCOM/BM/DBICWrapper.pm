@@ -47,22 +47,24 @@ usage:
     my $f = $this->jcom_factory('Article');
 
 =cut
- 
+
 sub dbic_factory{
-    my ($self , $name) = @_;
-    
-    my $class_name = $self->jcom_fact_baseclass().'::'.$name;
+  my ($self , $name) = @_;
+  unless( $name ){
+    confess("Missing name in call to dbic_factory");
+  }
+  my $class_name = $self->jcom_fact_baseclass().'::'.$name;
 
-    ## Build a class dynamically if necessary
-    unless( $self->_jcom_dbic_fact_classes->{$class_name} ){
-	## We need to build such a class.
-	Moose::Meta::Class->create($class_name => ( superclasses => [ 'JCOM::BM::DBICFactory' ] ));
-	$self->_jcom_dbic_fact_classes->{$class_name} = 1;
-    }
-    ## Ok, $class_name is now there
+  ## Build a class dynamically if necessary
+  unless( $self->_jcom_dbic_fact_classes->{$class_name} ){
+    ## We need to build such a class.
+    Moose::Meta::Class->create($class_name => ( superclasses => [ 'JCOM::BM::DBICFactory' ] ));
+    $self->_jcom_dbic_fact_classes->{$class_name} = 1;
+  }
+  ## Ok, $class_name is now there
 
-    ## Note that the factory will built its own resultset from this model and the name
-    return  $class_name->new({  bm => $self , name => $name });
+  ## Note that the factory will built its own resultset from this model and the name
+  return  $class_name->new({  bm => $self , name => $name });
 }
 
 1;
