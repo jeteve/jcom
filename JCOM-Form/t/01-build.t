@@ -21,4 +21,14 @@ ok( $f->add_field( JCOM::Form::Field::String->new({ form => $f , name => 'field3
 
 dies_ok(sub{ $f->add_field('field1'); } , "Cannot add twice the same field");
 
+ok( $f->add_error('There is an error') , "Ok can add error");
+ok( $f->has_errors() , "Form has errors");
+$f->clear();
+ok( ! $f->has_errors() , "Form doesnt have errors anymore");
+
+$f->field('field2')->add_error('A field error');
+ok( $f->has_errors() , "Ok form has error because of a field");
+$f->clear();
+ok(! $f->has_errors() , "Ok form is reset, so no error");
+
 done_testing();

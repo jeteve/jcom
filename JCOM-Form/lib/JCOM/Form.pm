@@ -25,6 +25,7 @@ has 'id' => ( isa => 'Str' , is => 'ro' , required => 1 , default => sub{ 'form_
 has 'fields' => ( isa => 'ArrayRef[JCOM::Form::Field]', is => 'ro' , required => 1 , default => sub{ [] } );
 has '_fields_idx' => ( isa => 'HashRef[Int]', is => 'ro' , required => 1, default => sub{ {} } );
 has '_field_next_num' => ( isa => 'Int' , is => 'rw' , default => 0 , required => 1 );
+has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
 
 =head2 BUILD
 
@@ -55,6 +56,19 @@ Usage:
 =cut
 
 sub build_fields{}
+
+=head2 add_error
+
+Adds an error to this form (as a string).
+
+ $this->add_error('Something is globally wrong');
+
+=cut
+
+sub add_error{
+  my ($self , $error) = @_;
+  push @{$self->errors()} , $error;
+}
 
 =head2 add_field
 
@@ -144,7 +158,7 @@ Usage:
 
 sub has_errors{
   my ($self) = @_;
-  return grep { $_->has_errors }  @{$self->fields()};
+  return scalar(@{$self->errors()}) || grep { $_->has_errors }  @{$self->fields()};
 }
 
 =head2 clear
@@ -156,6 +170,7 @@ ready to be used again.
 
 sub clear{
   my ($self) = @_;
+  $self->errors([]);
   map{ $_->clear() } @{$self->fields()};
 }
 
