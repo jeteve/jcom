@@ -162,6 +162,17 @@ sub field{
   return defined $idx ? $self->fields->[$idx] : undef;
 }
 
+=head2 is_valid
+
+Opposite of has_errors.
+
+=cut
+
+sub is_valid{
+  my ($self) = @_;
+  return ! $self->has_errors();
+}
+
 =head2 has_errors
 
 Returns true if this form has errors, false otherwise.

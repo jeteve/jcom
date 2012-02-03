@@ -30,6 +30,7 @@ $f->field('field2')->add_error('A field error');
 ok( $f->has_errors() , "Ok form has error because of a field");
 $f->clear();
 ok(! $f->has_errors() , "Ok form is reset, so no error");
+ok( $f->is_valid() , "Is also valid");
 ok( $f->field('field2')->set_label('Boudin blanc')->isa('JCOM::Form::Field') , "Ok can set label");
 
 done_testing();
