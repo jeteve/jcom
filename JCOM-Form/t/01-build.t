@@ -33,5 +33,6 @@ ok(! $f->has_errors() , "Ok form is reset, so no error");
 ok( $f->is_valid() , "Is also valid");
 ok( $f->field('field2')->set_label('Boudin blanc')->isa('JCOM::Form::Field') , "Ok can set label");
 ok( $f->field('field2')->id() , "Ok got an id");
+cmp_ok( $f->field('field2')->meta->short_class() , 'eq' , $f->field('field2')->short_class() , "Shortcut short_class works");
 
 done_testing();

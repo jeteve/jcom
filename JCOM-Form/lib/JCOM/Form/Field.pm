@@ -109,5 +109,58 @@ sub add_role{
   return $self;
 }
 
+=head2 roles_names
+
+Returns an array of Roles this field implements.
+
+=cut
+
+sub roles_names{
+  my ($self) = @_;
+  return  map{ $_->name() } $self->meta->calculate_all_roles_with_inheritance();
+}
+
+=head2 does_role
+
+Returns true if this field does the given role.
+
+Usage:
+
+  if( $this->does_role('Mandatory') ){
+    ...
+  }
+
+
+  if( $this->does_role('+My::Specific::Role') ){
+    ...
+  }
+
+=cut
+
+sub does_role{
+  my ($self , $role) = @_;
+  if( $role =~ /^\+/ ){
+    $role =~ s/^\+//;
+  }else{
+    $role = 'JCOM::Form::FieldRole::'.$role;
+  }
+  return $self->does($role);
+}
+
+=head2 short_class
+
+Accessor shortcut for meta short class.
+
+Usage:
+
+ $this->short_class();
+
+=cut
+
+sub short_class{
+  my ($self) = @_;
+  return $self->meta->short_class();
+}
+
 #__PACKAGE__->meta->make_immutable();
 1;
