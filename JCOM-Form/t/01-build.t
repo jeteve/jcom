@@ -32,5 +32,6 @@ $f->clear();
 ok(! $f->has_errors() , "Ok form is reset, so no error");
 ok( $f->is_valid() , "Is also valid");
 ok( $f->field('field2')->set_label('Boudin blanc')->isa('JCOM::Form::Field') , "Ok can set label");
+ok( $f->field('field2')->id() , "Ok got an id");
 
 done_testing();

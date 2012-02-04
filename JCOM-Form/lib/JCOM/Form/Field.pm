@@ -16,6 +16,21 @@ has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 );
 has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
 has 'value' => ( is => 'rw' , clearer => 'clear_value' );
 
+=head2 id
+
+Returns a unique id of this field in the space of all forms in the process.
+
+Usage:
+
+  my $id = $this->id();
+
+=cut
+
+sub id{
+  my ($self) = @_;
+  return $self->form()->id().'_'.$self->name();
+}
+
 =head2 set_label
 
 Chainable label method.
