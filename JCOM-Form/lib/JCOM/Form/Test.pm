@@ -36,6 +36,9 @@ sub build_fields{
   $self->add_field($field);
   $field->add_role('+JCOM::Form::FieldRole::Mandatory')->add_role('MinLength')->min_length(3);
 
+
+  my $email = $self->add_field('String' , 'email');
+  $email->add_role('Email');
   #$field->meta->short_class('String');
 }
 

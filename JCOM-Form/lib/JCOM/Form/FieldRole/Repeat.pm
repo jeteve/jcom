@@ -15,7 +15,7 @@ after 'validate' => sub{
   unless( $self->repeat_field ){ return ; }
 
   if( ( $self->repeat_field->value() // '' ) ne ( $self->value() // '' ) ){
-    $self->add_error("Please repeat the field ".$self->repeat_field->label());
+    $self->add_error("Please repeat the field \"".$self->repeat_field->label().'"');
   }
 
 };

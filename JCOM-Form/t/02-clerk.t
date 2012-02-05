@@ -60,4 +60,28 @@ $clerk->fill_form($f);
 ok( ! $f->has_errors() , "Ok no global form errors");
 ok( ! $f->field('repeat_mand')->has_errors() , "Ok repeat field is ok" );
 
+
+ok( $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => '1977-10-20',
+                                                       mandatory_str => 'Something',
+                                                       mandatory_and_long => 'SJISJISJJ',
+                                                       repeat_mand => 'SJISJISJJ',
+                                                       email => '"£$%^&*(',
+                                                     } ) );
+$f->clear();
+$clerk->fill_form($f);
+ok( $f->has_errors() , "Has error because of emails");
+ok( $f->field('email')->has_errors() , "Email field has errors" );
+
+ok( $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => '1977-10-20',
+                                                       mandatory_str => 'Something',
+                                                       mandatory_and_long => 'SJISJISJJ',
+                                                       repeat_mand => 'SJISJISJJ',
+                                                       email => 'patricia.lemoine@example.com',
+                                                     } ) );
+$f->clear();
+$clerk->fill_form($f);
+ok( ! $f->has_errors() , "Has error because of emails");
+ok( ! $f->field('email')->has_errors() , "Email field has errors" );
+
+
 done_testing();

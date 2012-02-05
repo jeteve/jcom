@@ -12,6 +12,7 @@ my $builder = Module::Build->new(
         'JCOM::Sequence' => 1,
         'Moose' => 1.23,
         'DateTime::Format::ISO8601' => 0.06,
+        'Mail::RFC822::Address' => 0.3,
     },
     add_to_cleanup      => [ 'JCOM-Form-*' ],
     create_makefile_pl => 'traditional',
