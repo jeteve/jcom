@@ -18,7 +18,10 @@ around 'value' => sub{
     return $self->$orig();
   }
 
-  return $self->$orig(lc($v));
+  my $new_v = lc($v);
+  $new_v =~ s/^\s+//;
+  $new_v =~ s/\s+$//;
+  return $self->$orig($new_v);
 };
 
 
