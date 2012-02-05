@@ -11,7 +11,7 @@ JCOM::Form::FieldRole::Mandatory - A Role that makes the field mandatory
 after 'validate' => sub{
   my ($self) = @_;
   unless( defined $self->value() ){
-    $self->add_error("Mandatory Value");
+    $self->add_error("This field is mandatory");
   }
 };
 
