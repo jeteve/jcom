@@ -11,6 +11,17 @@ JCOM::Form::FieldRole::Email - A Role that checks if the value looks like an ema
 =cut
 
 
+around 'value' => sub{
+  my ($orig, $self , $v ) = @_;
+
+  unless( defined $v ){
+    return $self->$orig();
+  }
+
+  return $self->$orig(lc($v));
+};
+
+
 after 'validate' => sub{
   my ($self) = @_;
 
