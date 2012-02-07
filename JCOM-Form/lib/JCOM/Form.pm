@@ -26,6 +26,7 @@ has 'fields' => ( isa => 'ArrayRef[JCOM::Form::Field]', is => 'ro' , required =>
 has '_fields_idx' => ( isa => 'HashRef[Int]', is => 'ro' , required => 1, default => sub{ {} } );
 has '_field_next_num' => ( isa => 'Int' , is => 'rw' , default => 0 , required => 1 );
 has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
+has 'submit_label' => ( isa => 'Str' , is => 'rw' , default => 'Submit', required => 1 );
 
 =head2 BUILD
 
