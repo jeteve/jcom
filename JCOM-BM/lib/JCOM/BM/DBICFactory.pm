@@ -1,5 +1,6 @@
 package JCOM::BM::DBICFactory;
 use Moose;
+extends qw/JCOM::BM::Factory/;
 
 =head1 NAME
 
