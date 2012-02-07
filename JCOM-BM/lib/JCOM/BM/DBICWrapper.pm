@@ -40,7 +40,8 @@ sub _build__jcom_dbic_fact_classes{
 
 =head2 dbic_factory
 
-Returns a new instance of L<JCOM::BM::Factory> that wraps around the given DBIC ResultSet name.
+Returns a new instance of L<JCOM::BM::Factory> that wraps around the given DBIC ResultSet name
+if such a resultset exists. Dies otherwise.
 
 usage:
 
@@ -64,7 +65,9 @@ sub dbic_factory{
   ## Ok, $class_name is now there
 
   ## Note that the factory will built its own resultset from this model and the name
-  return  $class_name->new({  bm => $self , name => $name });
+  my $instance = $class_name->new({  bm => $self , name => $name });
+  my $dbic_rs = $instance->dbic_rs();
+  return $instance;
 }
 
 1;

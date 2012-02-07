@@ -10,9 +10,10 @@ my $builder = Module::Build->new(
     build_requires => {
         'Test::More' => 0,
 	'Moose' => 0,
-  'DBIx::Class::Schema::Loader' => 0,
+        'DBIx::Class::Schema::Loader' => 0,
 	'Module::Pluggable::Object' => 0,
 	'DBIx::Class' => 0,
+        'Test::Fatal' => 0.008
     },
     add_to_cleanup      => [ 'JCOM-BM-*' ],
     create_makefile_pl => 'traditional',

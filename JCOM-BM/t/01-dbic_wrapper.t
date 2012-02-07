@@ -1,6 +1,7 @@
 #!perl -T
 
 use Test::More;
+use Test::Fatal qw/dies_ok lives_ok/;
 # use File::Temp;
 use DBI;
 use DBD::SQLite;
@@ -144,6 +145,11 @@ cmp_ok( $pf2->search()->count() , '==' , 2 , "Now two products in the active res
     cmp_ok( $cr->count() , '==' , 0 , "No coloured in green product found");
     $bm->colour('blue');
     cmp_ok( $bm->dbic_factory('ColouredProduct')->count() , '==' , 2 , 'Now two coloured product');
+}
+
+## Test a non existing factory
+{
+  dies_ok { $bm->dbic_factory('BoudinBlanc') } "No boudin blanc factory";
 }
 
 done_testing();
