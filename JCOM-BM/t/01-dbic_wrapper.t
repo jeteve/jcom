@@ -77,7 +77,7 @@ package main;
 ok( my $dbh = DBI->connect("dbi:SQLite::memory:" , "" , "") , "Ok connected as a DBI");
 ok( $dbh->{AutoCommit} = 1 , "Ok autocommit set");
 ok( $dbh->do("PRAGMA foreign_keys = ON") , "Ok set foreign keys");
-ok( $dbh->do('CREATE TABLE builder(id INTEGER PRIMARY KEY AUTOINCREMENT, bname VARCHAR(255) NOT NULL)') , "Ok creating builder table");
+ok( $dbh->do('CREATE TABLE builder(id INTEGER PRIMARY KEY AUTOINCREMENT, bname VARCHAR(255) UNIQUE NOT NULL)') , "Ok creating builder table");
 ok( $dbh->do('CREATE TABLE product(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), active BOOLEAN DEFAULT FALSE, colour VARCHAR(10) NOT NULL DEFAULT \'blue\', builder_id INTEGER,FOREIGN KEY (builder_id) REFERENCES builder(id))') , "Ok creating product table");
 
 ## Build a schema dynamically.
@@ -97,9 +97,15 @@ ok( my $bf = $bm->dbic_factory('Builder') , "Ok got builder factory");
 
 ## Object creation.
 ok( my $b = $bf->create( { bname => 'Builder1' }) , "Ok built the first builder");
+ok( my $ob = $bf->find_or_create( { bname => 'Builder1' }) , "Ok found or create builder");
+cmp_ok( $b->id() , '==' , $ob->id() , "Both builders are the same");
 ## Object loopback
 ok( $b = $bf->find($b->id()) , "Ok found it by id");
 cmp_ok( $b->bname , 'eq' , 'Builder1' , "Good data");
+
+{
+  ok( my $other_builder = $bf->find_or_create( { bname => 'Something never heard of' } ) , "Ok could create a new one");
+}
 
 ## Now a product
 ok( my $p = $pf->create( { name => 'Hoover' , builder => $b }) , "Ok could make a product");

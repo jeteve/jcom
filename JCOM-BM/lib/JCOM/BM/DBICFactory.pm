@@ -59,6 +59,18 @@ sub find{
     return $original ? $self->wrap($original) : undef;
 }
 
+=head2 find_or_create
+
+Wraps around the original DBIC find_or_create method.
+
+=cut
+
+sub find_or_create{
+  my ($self , $args) = @_;
+  my $original = $self->dbic_rs->find_or_create($args);
+  return $original ? $self->wrap($original) : undef;
+}
+
 =head2 search
 
 Search objects in the DBIC Schema and returns a new intance
