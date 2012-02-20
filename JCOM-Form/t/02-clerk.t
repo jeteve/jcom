@@ -14,8 +14,10 @@ foreach my $field ( @{$f->fields() }){
   diag($field->name().' '.join(',' , $field->meta->linearized_isa()));
 }
 ok( my $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => '2011-10-10',
+                                                          field_Boolean => 'Something true',
                                                         } ) );
 ok( $clerk->fill_form($f) , "Ok the clerk can fill the form" );
+ok( $f->field('field_Boolean')->value() , "Ok boolean field is true");
 ok( $f->field('mandatory_and_long')->has_errors() , "Ok mandatory and long string has errors");
 diag(join(',' , @{$f->field('mandatory_and_long')->errors()} )  );
 $f->clear();

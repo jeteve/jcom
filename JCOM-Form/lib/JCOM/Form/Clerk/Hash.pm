@@ -69,5 +69,15 @@ sub _fill_field_String{
   }
 }
 
+sub _fill_field_Boolean{
+  my ($self , $field) = @_;
+  my $value = $self->source->{$field->name()};
+  if( $value ){
+    $field->value(1);
+  }else{
+    $field->clear_value();
+  }
+}
+
 __PACKAGE__->meta->make_immutable();
 1;
