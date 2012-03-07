@@ -1,8 +1,6 @@
 package JCOM::Form;
-use Moose;
+use Moose -traits => 'JCOM::Form::Meta::Class::Trait::HasID';
 use Class::MOP;
-
-use JCOM::Sequence;
 
 use JCOM::Form::Field;
 use JCOM::Form::Field::String;
@@ -18,10 +16,9 @@ Version 0.01
 =cut
 
 our $VERSION = '0.01';
-my $FORMSEQ = JCOM::Sequence->new();
 
+__PACKAGE__->meta->id_prefix('form_');
 
-has 'id' => ( isa => 'Str' , is => 'ro' , required => 1 , default => sub{ 'form_'.$FORMSEQ->next() } );
 has 'fields' => ( isa => 'ArrayRef[JCOM::Form::Field]', is => 'ro' , required => 1 , default => sub{ [] } );
 has '_fields_idx' => ( isa => 'HashRef[Int]', is => 'ro' , required => 1, default => sub{ {} } );
 has '_field_next_num' => ( isa => 'Int' , is => 'rw' , default => 0 , required => 1 );
@@ -37,6 +34,18 @@ Hooks in the Moose BUILD to call build_fields
 sub BUILD{
   my ($self) = @_;
   $self->build_fields();
+}
+
+=head2 id
+
+Shortcut to $this->meta->id();
+
+=cut
+
+sub id{
+  my ($self) = @_;
+  warn "Calling ->id() is deprecated. Please use ->meta->id() instead";
+  return $self->meta->id();
 }
 
 =head2 do_accept
