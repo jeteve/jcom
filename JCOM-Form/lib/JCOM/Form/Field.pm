@@ -28,7 +28,7 @@ Usage:
 
 sub id{
   my ($self) = @_;
-  return $self->form()->id().'_'.$self->name();
+  return $self->form()->meta()->id().'_'.$self->name();
 }
 
 =head2 set_label

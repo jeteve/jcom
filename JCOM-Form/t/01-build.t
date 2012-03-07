@@ -5,8 +5,8 @@ use JCOM::Form;
 use DateTime;
 
 ok( my $f = JCOM::Form->new() );
-diag($f->id());
-ok( $f->id() =~ /^form_/ , "Ok form id is prefixed correctly");
+diag($f->meta->id());
+ok( $f->meta->id() =~ /^form_/ , "Ok form id is prefixed correctly");
 
 ok( $f->add_field('field1') );
 ok( $f->add_field('String' , 'field2') );
