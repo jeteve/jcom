@@ -78,7 +78,7 @@ ok( $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' 
                                                        mandatory_str => 'Something',
                                                        mandatory_and_long => 'SJISJISJJ',
                                                        repeat_mand => 'SJISJISJJ',
-                                                       email => 'patriCIA.lemoine@example.com',
+                                                       email => '            patriCIA.lemoine@example.com   ',
                                                      } ) );
 $f->clear();
 $clerk->fill_form($f);
