@@ -44,7 +44,8 @@ Shortcut to $this->meta->id();
 
 sub id{
   my ($self) = @_;
-  warn "Calling ->id() is deprecated. Please use ->meta->id() instead";
+  my ($package, $filename, $line) = caller;
+  warn "Calling ->id() from $package ($filename: $line) is deprecated. Please use ->meta->id() instead";
   return $self->meta->id();
 }
 

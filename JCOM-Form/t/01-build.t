@@ -7,6 +7,7 @@ use DateTime;
 ok( my $f = JCOM::Form->new() );
 diag($f->meta->id());
 ok( $f->meta->id() =~ /^form_/ , "Ok form id is prefixed correctly");
+ok( $f->id() , "Still ok to call deprecated id");
 
 ok( $f->add_field('field1') );
 ok( $f->add_field('String' , 'field2') );
