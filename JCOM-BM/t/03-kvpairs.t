@@ -18,4 +18,7 @@ my @kv = $set->next_kvpair();
 cmp_ok( @kv[0] , '==' , 1 , "Got first kv pair (1)");
 cmp_ok( @kv[1] , 'eq' , 'One' , "And it matches 'One'");
 
+ok( my $two = $set->lookup(2) , "Ok can lookup 2");
+cmp_ok( $two , 'eq' , 'Two' , "Got the right thing back");
+
 done_testing();

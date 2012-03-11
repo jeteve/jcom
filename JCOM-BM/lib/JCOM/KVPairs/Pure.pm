@@ -28,10 +28,11 @@ sub _build__index{
 
   my $idx = {};
   foreach my $kv ( @{$self->array()} ){
-    if( $idx->{$kv->[0]}){
-      confess("Key ".$kv->[0]." is repeated in your key value pairs");
+    my @kv = %$kv;
+    if( $idx->{$kv[0]}){
+      confess("Key ".$kv[0]." is repeated in your key value pairs");
     }
-    $idx->{$kv->[0]} = $kv->[1];
+    $idx->{$kv[0]} = $kv[1];
   }
   return $idx;
 }

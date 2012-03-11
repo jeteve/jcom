@@ -5,6 +5,7 @@ use Test::More;
 use Test::Exception;
 use JCOM::Form;
 use JCOM::Form::Clerk::Hash;
+use JCOM::KVPairs::Pure;
 
 # ok( my $f = JCOM::Form::Test->new() );
 # ok( scalar( @{$f->fields()} ) , "Ok form has fields");
@@ -48,6 +49,19 @@ $f->clear();
 JCOM::Form::Clerk::Hash->new( source => { aset => [ 1, 2 ] } )->fill_form($f);
 ok(! $f->has_errors() , "Ok No error again");
 
+$f->field('aset')->add_role('InKVPairs')->kvpairs(JCOM::KVPairs::Pure
+                                                  ->new({ array => [ { 1 => 'One'},
+                                                                     { 2 => 'Two'},
+                                                                     { 3 => 'Three'}
+                                                                   ]}));
+$f->clear();
+JCOM::Form::Clerk::Hash->new( source => { aset => [ 1, 2 , 4 ] } )->fill_form($f);
+ok( $f->has_errors() , "Form has errors, as 4 is not in the list of allowed values");
+
+$f->clear();
+JCOM::Form::Clerk::Hash->new( source => { aset => [ 1, 2 ] } )->fill_form($f);
+ok( ! $f->has_errors() , "Form has no errors. Only added allowed values");
+
 $f->field('aset')->add_role('MonoValued');
 $f->clear();
 JCOM::Form::Clerk::Hash->new( source => { aset => [ 1, 2 ] } )->fill_form($f);
@@ -55,7 +69,6 @@ ok($f->has_errors() , "Ok Error. Should be monovalued");
 $f->clear();
 JCOM::Form::Clerk::Hash->new( source => { aset => [ 2 ] } )->fill_form($f);
 ok(!$f->has_errors() , "Mono valued => no error");
-
 
 
 done_testing();
