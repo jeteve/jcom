@@ -79,5 +79,21 @@ sub _fill_field_Boolean{
   }
 }
 
+sub _fill_field_Set{
+  my ($self, $field) = @_;
+  my $value = $self->source()->{$field->name()};
+  unless( defined $value ){
+    $field->clear_value();
+    return;
+  }
+
+  unless( ref( $value ) eq 'ARRAY' ){
+    $value = [ $value ];
+  }
+
+  $field->value($value);
+
+}
+
 __PACKAGE__->meta->make_immutable();
 1;

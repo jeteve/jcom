@@ -13,6 +13,9 @@ ok( scalar( @{$f->fields()} ) , "Ok form has fields");
 foreach my $field ( @{$f->fields() }){
   diag($field->name().' '.join(',' , $field->meta->linearized_isa()));
 }
+
+
+$f->clear();
 ok( my $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => '2011-10-10',
                                                           field_Boolean => 'Something true',
                                                         } ) );
@@ -25,7 +28,8 @@ $f->clear();
 
 
 ok( $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => 'BAD_DATE_STRING',
-                                                       mandatory_and_long => 'S'
+                                                       mandatory_and_long => 'S',
+                                                       field_Set => [ 1 , 2 , 3 , 4 ],
                                                      } ) );
 ok( $clerk->fill_form($f) , "Ok the clerk can fill the form" );
 ok( $f->has_errors() , "Form has errors");
