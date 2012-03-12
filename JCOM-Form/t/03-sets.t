@@ -69,6 +69,8 @@ ok($f->has_errors() , "Ok Error. Should be monovalued");
 $f->clear();
 JCOM::Form::Clerk::Hash->new( source => { aset => [ 2 ] } )->fill_form($f);
 ok(!$f->has_errors() , "Mono valued => no error");
-
-
+ok( $f->field('aset')->has_value(2) , "Ok field has value 2");
+ok( ! $f->field('aset')->has_value(123) , "Ok field has no value 123");
+$f->clear();
+ok( ! $f->field('aset')->has_value(2), "A clear form field doesnt contain any value");
 done_testing();

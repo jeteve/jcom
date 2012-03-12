@@ -13,8 +13,49 @@ The 'value' field of this is in fact a set of values.
 
 =cut
 
-has '+value' => ( isa => 'ArrayRef[Value]' );
+has '+value' => ( isa => 'ArrayRef[Value]' , trigger => \&_value_set );
+
+has '_values_idx' => ( isa => 'HashRef[Value]' , is => 'rw' , required => 1 , default => sub{ {}; } );
 
 __PACKAGE__->meta->short_class('Set');
 __PACKAGE__->meta->make_immutable();
+
+=head2 has_value
+
+Tests if this field is currently holding the given value.
+
+Usage:
+
+ if( $this->has_value($whatever_value) ){
+    ...
+ }
+
+=cut
+
+sub has_value{
+  my ($self, $v) = @_;
+  return exists  $self->_values_idx->{$v};
+}
+
+
+sub _value_set{
+  my ($self , $value, $old_value ) = @_;
+  $self->_values_idx({});
+  foreach my $v ( @$value ){
+    $self->_values_idx()->{$v} = 1;
+  }
+}
+
+=head2 clear
+
+Overrides clear so it maintains the value index.
+
+=cut
+
+sub clear{
+   my ($self) = @_;
+   $self->next::method();
+   $self->_values_idx({});
+};
+
 1;
