@@ -37,15 +37,33 @@ sub _build__index{
   return $idx;
 }
 
+=head2 size
+
+See superclass L<JCOM::KVPairs>
+
+=cut
+
 sub size{
   my ($self) = @_;
   return scalar(@{$self->array()});
 }
 
+=head2 lookup
+
+See superclass L<JCOM::KVPairs>
+
+=cut
+
 sub lookup{
   my ($self , $key) = @_;
   return $self->_index()->{$key};
 }
+
+=head2 next_kvpair
+
+See superclass L<JCOM::KVPairs>
+
+=cut
 
 sub next_kvpair{
   my ($self) = @_;
