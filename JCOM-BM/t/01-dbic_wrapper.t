@@ -81,7 +81,7 @@ ok( $dbh->do('CREATE TABLE builder(id INTEGER PRIMARY KEY AUTOINCREMENT, bname V
 ok( $dbh->do('CREATE TABLE product(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), active BOOLEAN DEFAULT FALSE, colour VARCHAR(10) NOT NULL DEFAULT \'blue\', builder_id INTEGER,FOREIGN KEY (builder_id) REFERENCES builder(id))') , "Ok creating product table");
 
 ## Build a schema dynamically.
-ok( my $schema = My::Schema->connect(sub{ return $dbh ;} ), "Ok built schema with dbh");
+ok( my $schema = My::Schema->connect(sub{ return $dbh ;} , { unsafe => 1 } ), "Ok built schema with dbh");
 ## Just to check
 ok( $schema->resultset('Builder') , "Builder resultset is there");
 ok( $schema->resultset('Product') , "Product resultset is there");

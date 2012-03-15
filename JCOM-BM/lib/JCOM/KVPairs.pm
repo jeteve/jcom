@@ -18,7 +18,7 @@ Usage:
 =cut
 
 sub size{
-  my ($self);
+  my ($self) = @_;
   confess("Please implement this in $self");
 }
 
