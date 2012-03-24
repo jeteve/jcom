@@ -16,7 +16,7 @@ my $builder = Module::Build->new(
         'Test::Fatal' => 0.008
     },
     add_to_cleanup      => [ 'JCOM-BM-*' ],
-    create_makefile_pl => 'traditional',
+    #create_makefile_pl => 'traditional',
 );
 
 $builder->create_build_script();
