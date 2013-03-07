@@ -25,14 +25,24 @@ has 'dbic_rs' => ( is => 'ro' , isa => 'DBIx::Class::ResultSet', required => 1 ,
 has 'bm' => ( is => 'ro' , does => 'JCOM::BM::DBICWrapper' , required => 1 );
 has 'name' => ( is => 'ro' , isa => 'Str' , required => 1 );
 
-=head2 _build_dbic_resultset
+sub _build_dbic_rs{
+    my ($self) = @_;
+    return $self->build_dbic_rs();
+}
+
+=head2 build_dbic_rs
+
+Builds the dbic ResultSet to be wrapped by this factory.
+You can override this in your business specific factories to build
+specific resultsets.
 
 =cut
 
-sub _build_dbic_rs{
-    my ($self) = @_;
-    return $self->bm->jcom_schema->resultset($self->name);
+sub build_dbic_rs{
+  my ($self) = @_; 
+  return $self->bm->jcom_schema->resultset($self->name);
 }
+
 
 =head2 create
 

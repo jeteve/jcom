@@ -63,6 +63,12 @@ sub next_kvpair{
   return ( $next_row->$key() , $next_row->$value() );
 }
 
+=head2 lookup
+
+See superclass L<JCON::KVPairs>
+
+=cut
+
 sub lookup{
   my ($self, $lookup_key) = @_;
   my ($key , $value ) = ( $self->key() , $self->value() );

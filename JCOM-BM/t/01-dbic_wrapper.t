@@ -55,7 +55,7 @@ sub wrap{
 package My::Model::DBICFactory::ActiveProduct;
 use Moose;
 extends qw/My::Model::DBICFactory::Product/;
-sub _build_dbic_rs{
+sub build_dbic_rs{
     my ($self) = @_;
     return $self->bm->jcom_schema->resultset('Product')->search_rs({ active => 1});
 }
@@ -64,11 +64,11 @@ sub _build_dbic_rs{
 package My::Model::DBICFactory::ColouredProduct;
 use Moose;
 extends qw/My::Model::DBICFactory::Product/;
-sub _build_dbic_rs{
-    my ($self) = @_;
-    my $bm = $self->bm();
-    return $bm->jcom_schema->resultset('Product')->search_rs({ colour => $bm->colour() });
-}
+sub build_dbic_rs{
+  my ($self) = @_;
+  my $bm = $self->bm();
+  return $bm->jcom_schema->resultset('Product')->search_rs({ colour => $bm->colour() });
+};
 1;
 
 package main;
