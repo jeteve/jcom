@@ -5,7 +5,7 @@ use strict;
 
 =head1 NAME
 
-JCOM::BM - The great new JCOM::BM!
+JCOM::BM - Business model helpers
 
 =head1 VERSION
 
@@ -16,37 +16,23 @@ Version 0.01
 our $VERSION = '0.01';
 
 
-=head1 SYNOPSIS
+=head1 MODULES
 
-Quick summary of what the module does.
+=head2 DBICWrapper
 
-Perhaps a little code snippet.
+Wrap a DBIC Schema with your business model. See L<JCOM::BM::DBICWrapper>
 
-    use JCOM::BM;
+=head2 KVPairs
 
-    my $foo = JCOM::BM->new();
-    ...
+Expose a simple Key Value source from various sources.
 
-=head1 EXPORT
+See L<JCOM::BM::KVPairs> and its subclasses.
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+=head2 Sequence
 
-=head1 SUBROUTINES/METHODS
+An simple sequence object
 
-=head2 function1
-
-=cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
+See L<JCOM::BM::Sequence
 
 =head1 AUTHOR
 
