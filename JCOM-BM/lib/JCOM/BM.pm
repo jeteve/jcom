@@ -32,7 +32,7 @@ See L<JCOM::BM::KVPairs> and its subclasses.
 
 An simple sequence object
 
-See L<JCOM::BM::Sequence
+See L<JCOM::BM::Sequence> for details
 
 =head1 AUTHOR
 

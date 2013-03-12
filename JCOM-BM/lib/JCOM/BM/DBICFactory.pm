@@ -22,7 +22,7 @@ bm : An object consuming the role L<JCOM::BM::DBICWrapper>. Mandatory.
 =cut
 
 has 'dbic_rs' => ( is => 'ro' , isa => 'DBIx::Class::ResultSet', required => 1 , lazy_build => 1);
-has 'bm' => ( is => 'ro' , does => 'JCOM::BM::DBICWrapper' , required => 1 );
+has 'bm' => ( is => 'ro' , does => 'JCOM::BM::DBICWrapper' , required => 1 , weak_ref => 1 );
 has 'name' => ( is => 'ro' , isa => 'Str' , required => 1 );
 
 sub _build_dbic_rs{
