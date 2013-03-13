@@ -69,6 +69,18 @@ sub find{
     return $original ? $self->wrap($original) : undef;
 }
 
+=head2 first
+
+Equivalent to DBIC Resultset 'first' method.
+
+=cut
+
+sub first{
+  my ($self) = @_;
+  my $original = $self->dbic_rs->first();
+  return $original ? $self->wrap($original) : undef;
+}
+
 =head2 find_or_create
 
 Wraps around the original DBIC find_or_create method.
@@ -96,6 +108,7 @@ sub search{
 			 name => $self->name()
 		       });
 }
+
 
 =head2 wrap
 

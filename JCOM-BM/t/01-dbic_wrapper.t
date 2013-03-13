@@ -98,6 +98,7 @@ ok( my $bf = $bm->dbic_factory('Builder') , "Ok got builder factory");
 ## Object creation.
 ok( my $b = $bf->create( { bname => 'Builder1' }) , "Ok built the first builder");
 ok( my $ob = $bf->find_or_create( { bname => 'Builder1' }) , "Ok found or create builder");
+ok( my $first = $bf->first() , "Ok can find first builder");
 cmp_ok( $b->id() , '==' , $ob->id() , "Both builders are the same");
 ## Object loopback
 ok( $b = $bf->find($b->id()) , "Ok found it by id");
