@@ -105,7 +105,7 @@ So here's a very basic AllProducts:
 
 =cut
 
-has 'jcom_schema' => ( is => 'ro' , isa => 'DBIx::Class::Schema' , required => 1 );
+has 'jcom_schema' => ( is => 'rw' , isa => 'DBIx::Class::Schema' , required => 1 );
 has 'jcom_fact_baseclass' => ( is => 'ro' , isa => 'Str' , lazy_build => 1);
 
 has '_jcom_dbic_fact_classes' => ( is => 'ro' , isa => 'HashRef[Bool]' , lazy_build => 1); 
