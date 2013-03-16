@@ -125,6 +125,27 @@ sub wrap{
     return $o;
 }
 
+
+=head2 all
+
+Similar to DBIC Resultset all.
+
+Usage:
+
+ my @objs = $this->all();
+
+=cut
+
+sub all{
+  my ($self) = @_;
+  my $search = $self->search();
+  my @res = ();
+  while( my $next = $search->next() ){
+    push @res , $next;
+  }
+  return @res;
+}
+
 =head2 next
 
 Returns next Business Object from this current DBIx::Resultset.

@@ -145,6 +145,7 @@ cmp_ok( $seen_p , '==' , 1 , "Seen one product thanks to next");
 $p->activate();
 cmp_ok( $pf2->search()->count() , '==' , 2 , "Now two products in the active resultset");
 
+cmp_ok( scalar( $pf2->all() ) , '==' , 2 , "Two products via all");
 
 ## Now some colour testing
 {
