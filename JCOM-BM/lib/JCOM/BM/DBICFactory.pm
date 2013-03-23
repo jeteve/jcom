@@ -39,8 +39,12 @@ specific resultsets.
 =cut
 
 sub build_dbic_rs{
-  my ($self) = @_; 
-  return $self->bm->jcom_schema->resultset($self->name);
+  my ($self) = @_;
+  my $resultset = eval{ return $self->bm->jcom_schema->resultset($self->name); };
+  if( my $err = $@ ){
+    confess("Cannot build resultset for $self NAME=".$self->name().' :'.$err);
+  }
+  return $resultset;
 }
 
 
