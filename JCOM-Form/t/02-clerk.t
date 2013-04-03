@@ -23,7 +23,7 @@ ok( $clerk->fill_form($f) , "Ok the clerk can fill the form" );
 ok( $f->field('field_Boolean')->value() , "Ok boolean field is true");
 ok( $f->field('mandatory_and_long')->has_errors() , "Ok mandatory and long string has errors");
 diag(join(',' , @{$f->field('mandatory_and_long')->errors()} )  );
-$f->clear();
+$f->reset();
 
 
 

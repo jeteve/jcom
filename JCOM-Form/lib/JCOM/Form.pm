@@ -201,6 +201,16 @@ sub has_errors{
   return scalar(@{$self->errors()}) || grep { $_->has_errors }  @{$self->fields()};
 }
 
+=head2 reset
+
+Alias for clear. please override clear if you want. Don't touch this.
+
+=cut
+
+sub reset{
+  goto &clear;
+}
+
 =head2 clear
 
 Resets this form to its void state. After the call, this form is
