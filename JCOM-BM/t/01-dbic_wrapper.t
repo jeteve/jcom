@@ -93,6 +93,7 @@ ok( my $bm = My::Model->new({ jcom_schema => $schema }) , "Ok built a model");
 ## And test a few stuff.
 ok( my $pf = $bm->dbic_factory('Product') , "Ok got product factory");
 ok( my $pf2 = $bm->dbic_factory('ActiveProduct') , "Ok got another product factory");
+ok( my $pf3 = $bm->dbic_factory('Product' , { dbic_rs => $bm->jcom_schema->resultset('Product')->search_rs({ active => 1})}), "Can build a general product on a specific Rs");
 ok( my $bf = $bm->dbic_factory('Builder') , "Ok got builder factory");
 
 ## Object creation.
@@ -118,6 +119,7 @@ ok( $p->turn_on() , "Can be turned on as well");
 ## Note that it's created via the ActiveProduct resultset.
 ok( my $ap = $pf2->create({ name => 'Kettle' , builder => $b , active => 1  }) , "Ok made an active product");
 ok( ! $pf2->find($p->id()), "We cannot find the first product because it's not active");
+ok( ! $pf3->find($p->id()), "Same thing for pf3, because it's built on a ad-hoc resultset");
 ok( $pf2->find($ap->id()), "We can find the second product because it's active");
 
 ## Now some searching.
@@ -144,6 +146,7 @@ cmp_ok( $seen_p , '==' , 1 , "Seen one product thanks to next");
 
 $p->activate();
 cmp_ok( $pf2->search()->count() , '==' , 2 , "Now two products in the active resultset");
+cmp_ok( $pf3->search()->count() , '==' , 2 , "Same thing for pf3 (ad-hoc result set");
 
 cmp_ok( scalar( $pf2->all() ) , '==' , 2 , "Two products via all");
 

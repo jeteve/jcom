@@ -140,14 +140,19 @@ sub _build__jcom_dbic_fact_classes{
 Returns a new instance of L<JCOM::BM::Factory> that wraps around the given DBIC ResultSet name
 if such a resultset exists. Dies otherwise.
 
+Additionaly, you can set a ad-hoc resulset if you want to locally restrict your original resultset.
+
 usage:
 
     my $f = $this->jcom_factory('Article');
 
+    my $f = $this->jcom_factory('Article' , { dbic_rs => $schema->resultset('Article')->search_rs({ is_active => 1 }) });
+
 =cut
 
 sub dbic_factory{
-  my ($self , $name) = @_;
+  my ($self , $name , $init_args ) = @_;
+  $init_args //= {};
   unless( $name ){
     confess("Missing name in call to dbic_factory");
   }
@@ -162,7 +167,8 @@ sub dbic_factory{
   ## Ok, $class_name is now there
 
   ## Note that the factory will built its own resultset from this model and the name
-  my $instance = $class_name->new({  bm => $self , name => $name });
+  my $instance = $class_name->new({  bm => $self , name => $name , %$init_args });
+  ## This will die instantly if cannot find a dbic_rs
   my $dbic_rs = $instance->dbic_rs();
   return $instance;
 }
