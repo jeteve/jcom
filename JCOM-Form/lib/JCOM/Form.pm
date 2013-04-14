@@ -201,6 +201,27 @@ sub has_errors{
   return scalar(@{$self->errors()}) || grep { $_->has_errors }  @{$self->fields()};
 }
 
+=head2 dump_errors
+
+Convenience debugging method.
+
+Returns
+
+ { _form => [ 'error1' , ... ],
+   field1 => [ 'error' , ... ],
+   field2 => [ 'error' , ... ],
+   ...
+ }
+
+=cut
+
+sub dump_errors{
+  my ($self) = @_;
+  my %field_errors = map{ $_->name() => $_->errors() } @{$self->fields()};
+  return { _form => $self->errors(),
+           %field_errors };
+}
+
 =head2 reset
 
 Alias for clear. please override clear if you want. Don't touch this.
