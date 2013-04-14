@@ -26,7 +26,7 @@ has  'colour' => ( is => 'rw' , isa => 'Str' , default => 'green' , required => 
 package My::Model::O::Product;
 use Moose;
 extends 'JCOM::BM::DBICObject';
-has 'o' => ( isa => 'My::Schema::Product' , is => 'ro' , required => 1 , handles => [ 'id' , 'name' ] );
+has 'o' => ( is => 'ro' , required => 1 , handles => [ 'id' , 'name' ] );
 sub turn_on{
     my ($self) = @_;
     return "Turning on $self";
