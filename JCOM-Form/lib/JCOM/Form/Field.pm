@@ -14,6 +14,7 @@ has 'form' => ( isa => 'JCOM::Form' , is => 'ro' , weak_ref => 1 , required => 1
 
 has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 );
 has 'help' => ( isa => 'Str', is => 'rw');
+has 'placeholder' => ( isa => 'Str', is => 'rw' );
 
 has 'label' => ( isa => 'Str', is => 'rw' , required => 1 , default => '' );
 has 'value' => ( is => 'rw' , clearer => 'clear_value' );
@@ -33,6 +34,21 @@ Usage:
 sub id{
   my ($self) = @_;
   return $self->form()->meta()->id().'_'.$self->name();
+}
+
+=head2 set_placeholder
+
+Chainable placeholder(..);
+
+Placeholder. This is an extra hint, like an example of what to enter
+for users. Very useful for HMTL5 interfaces.
+
+=cut
+
+sub set_placeholder{
+  my ($self, $placeholder) = @_;
+  $self->placeholder($placeholder);
+  return $self;
 }
 
 =head2 set_help
