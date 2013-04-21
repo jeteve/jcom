@@ -16,6 +16,10 @@ around 'value' => sub{
   unless( defined $new_v ){
     return $self->$orig();
   }
+  if( ref($new_v) ){
+    ## Cannot trim a reference (for now, until we decide to trim values in a collection for instance).
+    return $self->$orig($new_v);
+  }
   $new_v =~ s/^\s+//;
   $new_v =~ s/\s+$//;
   return $self->$orig($new_v);

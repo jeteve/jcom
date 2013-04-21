@@ -30,7 +30,9 @@ extends qw/JCOM::Form/;
 
 sub build_fields{
   my ($self) = @_;
-  my $sf = $self->add_field('Set' , 'aset' );
+  ## Note that the Trimmed role should be without effect,
+  ## as it works only on single values.
+  my $sf = $self->add_field('Set' , 'aset' )->add_role('Trimmed');
 }
 
 1;
