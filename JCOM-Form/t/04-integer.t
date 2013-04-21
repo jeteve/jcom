@@ -25,6 +25,8 @@ JCOM::Form::Clerk::Hash->new( source => { aint => 1 } )->fill_form($f);
 ok( !$f->has_errors() , "Ok not errors");
 $f->clear();
 
+is( $f->field('aint')->meta->short_class() , 'Integer' , "Ok good short_class for field Integer");
+
 {
   ## Test mandatory role
   $f->field('aint')->add_role('Mandatory');
