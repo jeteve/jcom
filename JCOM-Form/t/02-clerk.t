@@ -18,6 +18,7 @@ foreach my $field ( @{$f->fields() }){
 $f->clear();
 ok( my $clerk = JCOM::Form::Clerk::Hash->new( source => { field_String => 'Blabla' , field_Date => '2011-10-10',
                                                           field_Boolean => 'Something true',
+                                                          field_Integer => '100',
                                                         } ) );
 ok( $clerk->fill_form($f) , "Ok the clerk can fill the form" );
 ok( $f->field('field_Boolean')->value() , "Ok boolean field is true");
