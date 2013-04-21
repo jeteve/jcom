@@ -10,7 +10,7 @@ ok( $f->meta->id() =~ /^form_/ , "Ok form id is prefixed correctly");
 ok( $f->id() , "Still ok to call deprecated id");
 
 ok( $f->add_field('field1') );
-ok( $f->add_field('String' , 'field2') );
+ok( $f->add_field('String' , 'field2')->set_help('This is field 2') , "Ok can build field2 with help text" );
 
 ok( $f->field('field1')->isa('JCOM::Form::Field::String') , "Ok field1 is a string");
 ok( $f->field('field2')->isa('JCOM::Form::Field::String') , "Ok field2 is a string too");

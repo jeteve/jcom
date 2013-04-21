@@ -11,10 +11,14 @@ JCOM::Form::Field - A field for JCOM::Form s
 =cut
 
 has 'form' => ( isa => 'JCOM::Form' , is => 'ro' , weak_ref => 1 , required => 1 );
-has 'label' => ( isa => 'Str', is => 'rw' , required => 1 , default => '' );
+
 has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 );
-has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
+has 'help' => ( isa => 'Str', is => 'rw');
+
+has 'label' => ( isa => 'Str', is => 'rw' , required => 1 , default => '' );
 has 'value' => ( is => 'rw' , clearer => 'clear_value' );
+
+has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
 
 =head2 id
 
@@ -29,6 +33,18 @@ Usage:
 sub id{
   my ($self) = @_;
   return $self->form()->meta()->id().'_'.$self->name();
+}
+
+=head2 set_help
+
+Chainable help() method.
+
+=cut
+
+sub set_help{
+  my ($self, $help) = @_;
+  $self->help($help);
+  return $self;
 }
 
 =head2 set_label
