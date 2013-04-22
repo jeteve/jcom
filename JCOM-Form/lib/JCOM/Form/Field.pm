@@ -134,7 +134,13 @@ sub add_role{
 
   ## Maintain important meta attributes.
   my $short_class = $self->meta->short_class();
-  apply_all_roles($self , $role );
+
+  ##apply_all_roles($self , $role );
+
+  ## This is better, as apply can be used to add new arguments
+  ## See http://search.cpan.org/~ether/Moose-2.0801/lib/Moose/Role.pm#APPLYING_ROLES
+  Class::MOP::load_class( $role );
+  $role->meta->apply($self);
 
   ## Maintain important meta attributes.
   $self->meta->short_class($short_class);
