@@ -120,11 +120,22 @@ sub clear{
 =head2 add_role
 
 Adds a Subrole of L<JCOM::Form::FieldRole> or a custom defined FormRole.
+Additionnaly, you can provide new parameters if the role you're applying
+requires some mandatory attributes.
+
+Returns the field so you can chain calls.
+
+Usage:
+
+ $this->add_role('Mandatory')
+         ->add_role('+My::App::FieldRole::Whatever');
+           ->add_role('RegExpMatch', { regexp_match => qr/^[A-Z]+$/ });
 
 =cut
 
 sub add_role{
-  my ($self , $role) = @_;
+  my ($self, $role, $new_args) = @_;
+  $new_args //= {};
 
   if( $role =~ /^\+/ ){
     $role =~ s/^\+//;
@@ -140,7 +151,7 @@ sub add_role{
   ## This is better, as apply can be used to add new arguments
   ## See http://search.cpan.org/~ether/Moose-2.0801/lib/Moose/Role.pm#APPLYING_ROLES
   Class::MOP::load_class( $role );
-  $role->meta->apply($self);
+  $role->meta->apply($self, rebless_params => $new_args );
 
   ## Maintain important meta attributes.
   $self->meta->short_class($short_class);
