@@ -97,6 +97,18 @@ sub find_or_create{
   return $original ? $self->wrap($original) : undef;
 }
 
+
+=head2 pager
+
+Shortcut to underlying dbic_rs pager.
+
+=cut
+
+sub pager{
+  my ($self) = @_;
+  return $self->dbic_rs->pager();
+}
+
 =head2 search_rs
 
 Alias for search
