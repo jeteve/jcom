@@ -123,7 +123,7 @@ ok( ! $pf3->find($p->id()), "Same thing for pf3, because it's built on a ad-hoc 
 ok( $pf2->find($ap->id()), "We can find the second product because it's active");
 
 ## Now some searching.
-ok( my $search_rs = $pf->search() , "Ok got a resultset");
+ok( my $search_rs = $pf->search_rs() , "Ok got a resultset");
 isa_ok( $search_rs , 'My::Model::DBICFactory::Product' , "And its a Product factory");
 cmp_ok( $search_rs->count() , '==' , 2 ,  "Got two products");
 my $seen_p = 0;

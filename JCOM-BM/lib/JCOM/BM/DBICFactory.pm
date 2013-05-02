@@ -97,6 +97,16 @@ sub find_or_create{
   return $original ? $self->wrap($original) : undef;
 }
 
+=head2 search_rs
+
+Alias for search
+
+=cut
+
+sub search_rs{
+  goto &search;
+}
+
 =head2 search
 
 Search objects in the DBIC Schema and returns a new intance
