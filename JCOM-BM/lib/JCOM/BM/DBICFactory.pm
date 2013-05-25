@@ -109,6 +109,17 @@ sub pager{
   return $self->dbic_rs->pager();
 }
 
+=head2 get_column
+
+Shortcut to the get_column of the decorated dbic_rs
+
+=cut
+
+sub get_column{
+  my ($self, @rest) = @_;
+  return $self->dbic_rs->get_column(@rest);
+}
+
 =head2 search_rs
 
 Alias for search

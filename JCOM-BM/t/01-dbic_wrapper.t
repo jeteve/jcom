@@ -92,6 +92,7 @@ ok( my $bm = My::Model->new({ jcom_schema => $schema }) , "Ok built a model");
 
 ## And test a few stuff.
 ok( my $pf = $bm->dbic_factory('Product') , "Ok got product factory");
+ok( my $name_col = $bm->dbic_factory('Product')->get_column('name') , "Ok got a name column");
 ok( my $pf2 = $bm->dbic_factory('ActiveProduct') , "Ok got another product factory");
 ok( my $pf3 = $bm->dbic_factory('Product' , { dbic_rs => $bm->jcom_schema->resultset('Product')->search_rs({ active => 1})}), "Can build a general product on a specific Rs");
 ok( my $bf = $bm->dbic_factory('Builder') , "Ok got builder factory");
