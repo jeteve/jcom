@@ -160,6 +160,11 @@ cmp_ok( scalar( $pf2->all() ) , '==' , 2 , "Two products via all");
     cmp_ok( $bm->dbic_factory('ColouredProduct')->count() , '==' , 2 , 'Now two coloured product');
 }
 
+## Try deleting all the coloured products.
+$bm->dbic_factory('ColouredProduct')->delete();
+cmp_ok( $bm->dbic_factory('ColouredProduct')->count() , '==' , 0 , 'No coloured products anymore.');
+
+
 ## Test a non existing factory
 {
   dies_ok { $bm->dbic_factory('BoudinBlanc') } "No boudin blanc factory";

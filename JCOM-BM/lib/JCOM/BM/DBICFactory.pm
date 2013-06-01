@@ -109,6 +109,19 @@ sub pager{
   return $self->dbic_rs->pager();
 }
 
+=head2 delete
+
+Shortcut to L<DBIx::Class::ResultSet> delete method of the
+underlying dbic_rs
+
+
+=cut
+
+sub delete{
+  my ($self , @rest) = @_;
+  return $self->dbic_rs->delete(@rest);
+}
+
 =head2 get_column
 
 Shortcut to the get_column of the decorated dbic_rs
