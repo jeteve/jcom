@@ -16,8 +16,13 @@ DBIC resulsets, you need to subclass this.
 
 =head1 PROPERTIES
 
-dbic_rs : The original L<DBIx::Class::ResultSet>. Mandatory.
-bm : An object consuming the role L<JCOM::BM::DBICWrapper>. Mandatory.
+=head2 dbic_rs
+
+ The original L<DBIx::Class::ResultSet>. Mandatory.
+
+=head2 bm
+
+The business model consuming the role L<JCOM::BM::DBICWrapper>. Mandatory.
 
 =cut
 
