@@ -4,7 +4,7 @@ with qw/JCOM::Form::FieldRole/;
 
 =head1 NAME
 
-JCOM::Form::FieldRole::MinLength - A Role that gives a min_length to this field.
+JCOM::Form::FieldRole::MaxLength - A Role that gives a max_length to this field.
 
 =cut
 
