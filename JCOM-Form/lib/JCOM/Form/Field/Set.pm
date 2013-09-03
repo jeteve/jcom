@@ -48,6 +48,8 @@ Return false on duplicate and true on success.
 sub add_value{
   my ($self, $v) = @_;
   if( $self->has_value($v) ){ return; }
+  ## Initialize if needed.
+  $self->value() // $self->value([]);
   my $last_idx = scalar(@{$self->value()});
   push @{$self->value()} , $v;
   $self->_values_idx()->{$v} = $last_idx;
