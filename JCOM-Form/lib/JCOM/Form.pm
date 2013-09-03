@@ -245,6 +245,32 @@ sub clear{
   map{ $_->clear() } @{$self->fields()};
 }
 
+=head2 values_hash
+
+Returns a hash of values like that:
+
+{
+  a => 'aaa',
+  b => 'bbb',
+  multiplea => [ v1 , v2 , v3 ],
+  multipleb => []
+}
+
+You can feed this hash to the L<JCOM::Form::Clerk::Hash>
+got populate a similar form.
+
+=cut
+
+sub values_hash{
+  my ($self) = @_;
+
+  my $ret = {};
+  foreach my $field ( @{$self->fields()} ){
+    $ret->{$field->name()} = $field->value_struct();
+  }
+  return $ret;
+}
+
 =head1 AUTHOR
 
 Jerome Eteve, C<< <jerome.eteve at gmail.com> >>

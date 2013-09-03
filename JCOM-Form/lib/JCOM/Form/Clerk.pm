@@ -99,8 +99,8 @@ sub _fill_field_String{
 sub _fill_field_Boolean{
   my ($self , $field) = @_;
   my $value = $self->_get_source_value($field);
-  if( $value ){
-    $field->value(1);
+  if( defined $value ){
+    $field->value($value ? 1 : 0);
   }else{
     $field->clear_value();
   }

@@ -36,6 +36,20 @@ sub id{
   return $self->form()->meta()->id().'_'.$self->name();
 }
 
+=head2 value_struct
+
+Returns the string value of this field.
+
+=cut
+
+sub value_struct{
+  my ($self) = @_;
+  unless( defined $self->value() ){
+    return undef;
+  }
+  return $self->value().'';
+}
+
 =head2 set_placeholder
 
 Chainable placeholder(..);

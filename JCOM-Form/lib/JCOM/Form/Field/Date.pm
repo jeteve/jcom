@@ -12,6 +12,21 @@ JCOM::Form::Field::Date - A single DateTime field.
 
 has '+value' => ( isa => 'DateTime' );
 
+=head2 value_struct
+
+Returns the string value of this field.
+
+=cut
+
+sub value_struct{
+  my ($self) = @_;
+  unless( defined $self->value() ){
+    return undef;
+  }
+  return $self->value()->iso8601();
+}
+
+
 __PACKAGE__->meta->short_class('Date');
 __PACKAGE__->meta->make_immutable();
 1;
