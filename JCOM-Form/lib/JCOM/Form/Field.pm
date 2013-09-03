@@ -2,6 +2,8 @@ package JCOM::Form::Field;
 use Moose -traits => 'JCOM::Form::Meta::Class::Trait::HasShortClass';
 use Moose::Util qw/apply_all_roles/;
 
+with qw(MooseX::Clone);
+
 __PACKAGE__->meta->short_class('GenericField');
 
 =head1 NAME

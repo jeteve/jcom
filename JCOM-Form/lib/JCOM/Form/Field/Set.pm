@@ -38,6 +38,47 @@ sub has_value{
 }
 
 
+=head2 add_value
+
+Adding value to this set. Will NOT add duplicates.
+Return false on duplicate and true on success.
+
+=cut
+
+sub add_value{
+  my ($self, $v) = @_;
+  if( $self->has_value($v) ){ return; }
+  my $last_idx = scalar(@{$self->value()});
+  push @{$self->value()} , $v;
+  $self->_values_idx()->{$v} = $last_idx;
+  return 1;
+}
+
+=head2 remove_value
+
+Removes value from this set. Returns false on failure (it was not in this set)
+and true on success.
+
+=cut
+
+sub remove_value{
+  my ($self, $v) = @_;
+  my $idx = $self->_values_idx()->{$v};
+  unless( defined $idx ){ return; };
+
+  # Splice the array for one element at idx
+  splice( @{$self->value()} , $idx , 1);
+
+  ## Delete index key for $v
+  delete $self->_values_idx()->{$v};
+
+  ## Update the index so all values from idx onward gets decremented.
+  foreach my $value ( @{$self->value}[$idx..scalar(@{$self->value})-1] ){
+    $self->_values_idx()->{$value} -= 1;
+  }
+  return 1;
+}
+
 sub _value_set{
   my ($self , $value, $old_value ) = @_;
   $self->_values_idx({});

@@ -75,4 +75,35 @@ ok( $f->field('aset')->has_value(2) , "Ok field has value 2");
 ok( ! $f->field('aset')->has_value(123) , "Ok field has no value 123");
 $f->clear();
 ok( ! $f->field('aset')->has_value(2), "A clear form field doesnt contain any value");
+
+
+{
+  ## Test add and remove values.
+  package MyFormSetAdd;
+  use Moose;
+  extends qw/JCOM::Form/;
+  sub build_fields{
+    my ($self) = @_;
+    $self->add_field('Set' , 'aset' );
+  }
+  1;
+  package main;
+  my $f = MyFormSetAdd->new();
+  my $sf = $f->field('aset');
+  $sf->value([ 'a' , 'b' , 'c' ]);
+
+  ok( $sf->add_value('d') , "Ok can add new value");
+  ok(! $sf->add_value('b') , "Ok cannot add b");
+  is_deeply( $sf->value() , [ 'a' , 'b' , 'c' , 'd' ] ,"Ok add");
+  is( $sf->_values_idx()->{d} , 3 , "Good index for new value");
+  ok( $sf->remove_value('b') , "Ok can remove existing value");
+  ok( ! $sf->has_value('b') , "Ok no c value left in set");
+  is( $sf->_values_idx()->{d} , 2 , "Good index for d");
+  is( $sf->_values_idx()->{c} , 1 , "Good index for b");
+  ok(! exists $sf->_values_idx()->{b} , "No index for gone value");
+  is( $sf->_values_idx()->{a} , 0 , "Good index for a");
+}
+
+
 done_testing();
+

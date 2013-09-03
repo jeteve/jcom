@@ -22,11 +22,16 @@ our $VERSION = '0.01';
 
 __PACKAGE__->meta->id_prefix('form_');
 
-has 'fields' => ( isa => 'ArrayRef[JCOM::Form::Field]', is => 'ro' , required => 1 , default => sub{ [] } );
-has '_fields_idx' => ( isa => 'HashRef[Int]', is => 'ro' , required => 1, default => sub{ {} } );
-has '_field_next_num' => ( isa => 'Int' , is => 'rw' , default => 0 , required => 1 );
-has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
-has 'submit_label' => ( isa => 'Str' , is => 'rw' , default => 'Submit', required => 1 );
+has 'fields' => ( isa => 'ArrayRef[JCOM::Form::Field]', is => 'ro' , required => 1 , default => sub{ [] } ,
+                traits => ['Clone']);
+has '_fields_idx' => ( isa => 'HashRef[Int]', is => 'ro' , required => 1, default => sub{ {} },
+                     traits => [ 'Clone' ]);
+has '_field_next_num' => ( isa => 'Int' , is => 'rw' , default => 0 , required => 1 ,
+                         traits => ['Clone']);
+has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 ,
+                traits => [ 'Clone' ]);
+has 'submit_label' => ( isa => 'Str' , is => 'rw' , default => 'Submit', required => 1 ,
+                      traits => [ 'Clone' ]);
 
 =head2 BUILD
 
