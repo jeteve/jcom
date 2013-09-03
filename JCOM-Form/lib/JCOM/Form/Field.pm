@@ -14,14 +14,14 @@ JCOM::Form::Field - A field for JCOM::Form s
 
 has 'form' => ( isa => 'JCOM::Form' , is => 'ro' , weak_ref => 1 , required => 1 );
 
-has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 );
-has 'help' => ( isa => 'Str', is => 'rw');
-has 'placeholder' => ( isa => 'Str', is => 'rw' );
+has 'name' => ( isa => 'Str' , is => 'ro' , required => 1 , traits => [ 'Clone' ]);
+has 'help' => ( isa => 'Str', is => 'rw', traits => [ 'Clone' ]);
+has 'placeholder' => ( isa => 'Str', is => 'rw' , traits => [ 'Clone' ]);
 
-has 'label' => ( isa => 'Str', is => 'rw' , required => 1 , default => '' );
-has 'value' => ( is => 'rw' , clearer => 'clear_value' );
+has 'label' => ( isa => 'Str', is => 'rw' , required => 1 , default => '' ,  traits => [ 'Clone' ]);
+has 'value' => ( is => 'rw' , clearer => 'clear_value' , traits => [ 'Clone' ]);
 
-has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 );
+has 'errors' => ( isa => 'ArrayRef[Str]' , is => 'rw' , default => sub{ [] } , required => 1 , traits => [ 'Clone' ] );
 
 =head2 id
 
