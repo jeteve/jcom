@@ -5,6 +5,9 @@ use Class::MOP;
 use JCOM::Form::Field;
 use JCOM::Form::Field::String;
 
+with qw(MooseX::Clone);
+
+
 =head1 NAME
 
 JCOM::Form - A Moose base class for Form implementation

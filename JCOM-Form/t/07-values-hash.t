@@ -40,19 +40,19 @@ my @input_hashes = (
                       a_set => [ 'a', 'b' , 3 ],
                       a_string => 'bla'
                     },
-                    { a_bool => undef,
+                    { a_bool => 0,
                       a_date => '1977-10-20T17:04:00',
                       a_int => 314,
                       a_set => [ 'a', 'b' , 3 ],
                       a_string => 'bla'
                     },
-                    { a_bool => undef,
+                    { a_bool => 0,
                       a_date => undef,
                       a_int => 314,
                       a_set => [ 'a', 'b' , 3 ],
                       a_string => 'bla'
                     },
-                    { a_bool => undef,
+                    { a_bool => 0,
                       a_date => undef,
                       a_int => undef,
                       a_set => undef,

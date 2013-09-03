@@ -16,6 +16,21 @@ to stay consistent with the Role Mandatory.
 
 has '+value' => ( isa => 'Bool' );
 
+=head2 value_struct
+
+Returns the string value of this field.
+
+=cut
+
+sub value_struct{
+  my ($self) = @_;
+  unless( $self->value() ){
+    return 0;
+  }
+  return 1;
+}
+
+
 __PACKAGE__->meta->short_class('Boolean');
 __PACKAGE__->meta->make_immutable();
 1;

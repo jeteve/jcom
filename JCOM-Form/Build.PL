@@ -12,6 +12,7 @@ my $builder = Module::Build->new(
         'JCOM::Sequence' => 0,
         'JCOM::KVPairs::Pure' => 0,
         'Moose' => 1.23,
+        'MooseX::Clone' => 0.05,
         'DateTime::Format::ISO8601' => 0.06,
         'Mail::RFC822::Address' => 0.3,
     },
