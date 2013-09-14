@@ -15,7 +15,7 @@ after 'validate' => sub{
   unless( defined $self->value() ){ return ; }
 
   if( length($self->value()) > $self->max_length() ){
-    $self->add_error('Value too long. Mininum length is '.$self->max_length().' characters');
+    $self->add_error('Value too long. Maximum length is '.$self->max_length().' characters');
   }
 
 };
