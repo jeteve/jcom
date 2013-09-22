@@ -9,6 +9,7 @@ lib/JCOM/KVPairs.pm
 lib/JCOM/KVPairs/DBICRs.pm
 lib/JCOM/KVPairs/Pure.pm
 lib/JCOM/Sequence.pm
+Makefile.PL
 MANIFEST
 META.json
 META.yml
