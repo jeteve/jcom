@@ -1,4 +1,4 @@
-#!perl -T
+#!perl
 use Test::More;
 use Test::Exception ;
 use DBI;
@@ -11,19 +11,21 @@ sub jcom_get_dbh{ return shift->dbh(); }
 1;
 
 package main;
-unless( $ENV{'TEST_PG_DSN'} && $ENV{'PGUSER'} && $ENV{'PGPASSWORD'} ){
-    plan skip_all => q|
-No TEST_PG_DSN specified in environment. Bailing out.
 
-run this with something like:
+eval{ require Test::postgresql;};
+if( $@ ){
+  plan skip_all => 'No Test::postgresql';
+  done_testing();
+};
 
-TEST_PG_DSN="dbi:Pg:dbname=testdb;host=localhost" PGUSER=bill PGPASSWORD=baroud" perl -Ilib t/...
-
-|;
+my $pgsql = Test::postgresql->new();
+unless( $pgsql ){
+  plan skip_all => ${"Test::postgresql::errstr"};
+  done_testing();
 }
 
 
-my $dsn = $ENV{'TEST_PG_DSN'};
+my $dsn = $pgsql->dsn;
 ok( my $dbh = DBI->connect($dsn , '' , '' , { AutoCommit => 1 }) , "Ok connecting to db");
 unless( $dbh ){
     BAIL_OUT("Could not connect to DB using $dsn");
@@ -62,7 +64,3 @@ ok( $rc eq 'BINARYCONTENT' , "Same content was retrieved");
 }
 
 done_testing();
-
-END{
-    $dbh->rollback() if $dbh;
-}
