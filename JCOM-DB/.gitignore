@@ -12,3 +12,4 @@ pod2htm*.tmp
 JCOM-DB-*
 MYMETA.yml
 MYMETA.json
+*.bak
