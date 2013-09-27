@@ -73,8 +73,8 @@ using the wrapper method.
 =cut
 
 sub find{
-    my ($self , $args) = @_;
-    my $original = $self->dbic_rs->find($args);
+    my ($self , @rest) = @_;
+    my $original = $self->dbic_rs->find(@rest);
     return $original ? $self->wrap($original) : undef;
 }
 
