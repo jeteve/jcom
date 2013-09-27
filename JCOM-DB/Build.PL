@@ -16,6 +16,7 @@ my $builder = Module::Build->new(
 	'DBI' => 0,
 	'DBD::Pg' => 0,
 	'DBIx::Class' => 0,
+        'Digest::SHA' => 5.61,
 	'Crypt::OpenPGP' => 0,
     },
     add_to_cleanup      => [ 'JCOM-DB-*' ],
