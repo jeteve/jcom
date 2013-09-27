@@ -2,8 +2,11 @@ package JCOM::DB::Pg::Monitor;
 use Moose::Role;
 use Digest::SHA;
 
+use Log::Log4perl;
 
 with qw/JCOM::DB::DBIAble/;
+
+my $LOGGER = Log::Log4perl->get_logger();
 
 =head1 NAME
 
@@ -61,7 +64,7 @@ Usage:
 sub jcom_db_mutex{
   my ($self, $key, $exclusive_code) = @_;
 
-  my $twenty_bytes = Digest::SHA::sha1("whatever".int(rand(100)));
+  my $twenty_bytes = Digest::SHA::sha1($key);
   my $four_first = substr($twenty_bytes, 0, 4);
   my $four_next  = substr($twenty_bytes, 4, 4);
 
@@ -71,8 +74,10 @@ sub jcom_db_mutex{
 
   my $dbh = $self->jcom_get_dbh();
 
-
+  $LOGGER->debug("WILL LOCK ON $ia,$ib");
   $dbh->selectrow_arrayref("SELECT pg_advisory_lock(?, ?)" , {}, $ia , $ib);
+  $LOGGER->debug("PASSED LOCK ON $ia,$ib");
+
   my $res = eval { scalar(&{$exclusive_code}()) };
   my $err = $@;
   $dbh->selectrow_arrayref("SELECT pg_advisory_unlock(?, ?)",{},  $ia, $ib);
