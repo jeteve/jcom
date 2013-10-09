@@ -40,6 +40,7 @@ t/05-regexp.t
 t/06-maxlength.t
 t/07-values-hash.t
 t/08-clone.t
+t/09-dates.t
 t/boilerplate.t
 t/manifest.t
 t/pod-coverage.t
