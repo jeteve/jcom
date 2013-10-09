@@ -43,6 +43,7 @@ Usage:
 sub value_matches{
   my ($self, $other) = @_;
   unless( defined $self->value() ){ return; }
+  unless( defined $other){ return; }
   return DateTime->compare($self->value(), $other->clone()->truncate( to => $self->date_truncation() )) == 0;
 }
 
