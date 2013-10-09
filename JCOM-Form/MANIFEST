@@ -11,6 +11,7 @@ lib/JCOM/Form/Field/Integer.pm
 lib/JCOM/Form/Field/Set.pm
 lib/JCOM/Form/Field/String.pm
 lib/JCOM/Form/FieldRole.pm
+lib/JCOM/Form/FieldRole/DateTruncate.pm
 lib/JCOM/Form/FieldRole/Email.pm
 lib/JCOM/Form/FieldRole/HasKVPairs.pm
 lib/JCOM/Form/FieldRole/InKVPairs.pm
@@ -25,7 +26,10 @@ lib/JCOM/Form/FieldRole/Trimmed.pm
 lib/JCOM/Form/Meta/Class/Trait/HasID.pm
 lib/JCOM/Form/Meta/Class/Trait/HasShortClass.pm
 lib/JCOM/Form/Test.pm
+Makefile.PL
 MANIFEST
+META.json
+META.yml
 README
 t/00-load.t
 t/01-build.t
@@ -40,6 +44,3 @@ t/boilerplate.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
-Makefile.PL
-META.yml
-META.json
