@@ -12,7 +12,7 @@ has 'date_truncation' => ( is => 'rw' , isa => 'Str', required => 1);
 
 around 'value' => sub{
   my ($orig, $self, $new_date) = @_;
-  unless( $new_date ){ return $self->$orig() ; };
+  unless( $new_date ){ return $self->$orig();};
 
   return $self->$orig($new_date->truncate( to => $self->date_truncation ));
 };
