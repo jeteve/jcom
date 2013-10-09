@@ -16,6 +16,7 @@ sub build_fields{
   my ($self) = @_;
   $self->add_field('Boolean' , 'a_bool' );
   $self->add_field('Date' , 'a_date' );
+  $self->add_field('Date' , 'month')->add_role('DateTruncate' , { date_truncation => 'month' });
   $self->add_field('Integer' , 'a_int' );
   $self->add_field('Set' , 'a_set' );
   $self->add_field('String' , 'a_string' );
@@ -32,31 +33,39 @@ my @input_hashes = (
                       a_date => '1977-10-20T17:04:00',
                       a_int => 314,
                       a_set => [ 'a', 'b' , 3 ],
-                      a_string => 'bla'
+                      a_string => 'bla',
+                      month => '1977-01-01',
                     },
                     { a_bool => 1,
                       a_date => '1977-10-20T17:04:00',
                       a_int => 314,
                       a_set => [ 'a', 'b' , 3 ],
-                      a_string => 'bla'
+                      a_string => 'bla',
+                      month => '1977-01-01',
+
                     },
                     { a_bool => 0,
                       a_date => '1977-10-20T17:04:00',
                       a_int => 314,
                       a_set => [ 'a', 'b' , 3 ],
-                      a_string => 'bla'
+                      a_string => 'bla',
+                      month => '1977-01-01',
+
                     },
                     { a_bool => 0,
                       a_date => undef,
                       a_int => 314,
                       a_set => [ 'a', 'b' , 3 ],
-                      a_string => 'bla'
+                      a_string => 'bla',
+                      month => '1977-01-01',
+
                     },
                     { a_bool => 0,
                       a_date => undef,
                       a_int => undef,
                       a_set => undef,
-                      a_string => undef
+                      a_string => undef,
+                      month => '1977-01-01',
                     },
                    );
 
