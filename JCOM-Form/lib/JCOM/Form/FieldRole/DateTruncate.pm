@@ -1,5 +1,6 @@
 package JCOM::Form::FieldRole::DateTruncate;
 use Moose::Role;
+use DateTime;
 with qw/JCOM::Form::FieldRole/;
 
 =head1 NAME
@@ -28,5 +29,21 @@ around 'value_struct' => sub{
     return $self->value()->iso8601();
   }
 };
+
+=head2 value_matches
+
+Returns true if the held value matches the given date given the set date_truncation.
+
+Usage:
+
+ $this->value_matches(DateTime->now());
+
+=cut
+
+sub value_matches{
+  my ($self, $other) = @_;
+  unless( defined $self->value() ){ return; }
+  return DateTime->compare($self->value(), $other->clone()->truncate( to => $self->date_truncation() )) == 0;
+}
 
 1;
