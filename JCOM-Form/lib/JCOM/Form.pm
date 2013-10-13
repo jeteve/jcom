@@ -5,6 +5,8 @@ use Class::MOP;
 use JCOM::Form::Field;
 use JCOM::Form::Field::String;
 
+use Scalar::Util;
+
 with qw(MooseX::Clone);
 
 
@@ -42,6 +44,26 @@ Hooks in the Moose BUILD to call build_fields
 sub BUILD{
   my ($self) = @_;
   $self->build_fields();
+}
+
+
+=head2 fast_clone
+
+Returns fast clone of this form. This is field value focused and as shallow as possible,
+so use with care if you want to change anything else than field values in your clones.
+
+Benchmarking has shown this is 50x faster than the MooseX::Clone based clone method.
+
+Usage:
+
+ my $clone = $this->fast_clone();
+
+=cut
+
+sub fast_clone{
+  my ($self) = @_;
+  my $new_fields = [ map { $_->fast_clone() } @{ $self->fields() } ];
+  return bless { %$self , fields => $new_fields } , Scalar::Util::blessed($self);
 }
 
 =head2 id

@@ -26,6 +26,19 @@ sub value_struct{
   return $self->value()->iso8601();
 }
 
+=head2 value_clone
+
+Returns a DateTime::clone of the value.
+
+=cut
+
+sub value_clone{
+  my ($self) = @_;
+  unless( $self->value() ){ return ; }
+  # Cloning a DateTime.
+  return $self->value()->clone();
+}
+
 
 __PACKAGE__->meta->short_class('Date');
 __PACKAGE__->meta->make_immutable();

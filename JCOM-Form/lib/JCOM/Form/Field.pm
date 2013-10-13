@@ -38,6 +38,31 @@ sub id{
   return $self->form()->meta()->id().'_'.$self->name();
 }
 
+=head2 fast_clone
+
+Returns a fast clone of this field.
+
+=cut
+
+sub fast_clone{
+  my ($self) = @_;
+
+  my $new = bless { %$self } , Scalar::Util::blessed($self);
+  $new->value($self->value_clone());
+  return $new;
+}
+
+=head2 value_clone
+
+Returns a shallow clone of the contained value (can be undef)
+
+=cut
+
+sub value_clone{
+  my ($self) = @_;
+  return $self->value();
+}
+
 =head2 value_struct
 
 Returns the string value of this field.

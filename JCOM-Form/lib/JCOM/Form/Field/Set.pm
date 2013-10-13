@@ -20,6 +20,18 @@ has '_values_idx' => ( isa => 'HashRef[Value]' , is => 'rw' , required => 1 , de
 __PACKAGE__->meta->short_class('Set');
 __PACKAGE__->meta->make_immutable();
 
+=head2 value_clone
+
+Returns a shallow clone of the set of contained values (or undef)
+
+=cut
+
+sub value_clone{
+  my ($self) = @_;
+  unless( $self->value() ){ return ; }
+  return [ @{$self->value()} ];
+}
+
 =head2 has_value
 
 Tests if this field is currently holding the given value.

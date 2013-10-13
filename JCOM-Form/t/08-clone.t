@@ -7,7 +7,6 @@ use Test::Exception;
 use JCOM::Form;
 use JCOM::Form::Clerk::Hash;
 
-
 package MyForm4Hash;
 use Moose;
 extends qw/JCOM::Form/;
@@ -41,32 +40,37 @@ foreach my $input_hash ( @input_hashes ){
 
   JCOM::Form::Clerk::Hash->new( source => $input_hash )->fill_form($f);
 
-  my $clone = $f->clone();
-  $clone->field('a_bool')->value(!$f->field('a_bool')->value());
-  ok( $f->field('a_bool')->value == ! $clone->field('a_bool')->value() , "Ok clone is different on boolean");
+  foreach my $clone_method ( 'clone' , 'fast_clone' ){
+    diag("Clone method $clone_method");
+    my $clone = $f->$clone_method();
+    $clone->field('a_bool')->value(!$f->field('a_bool')->value());
+    ok( $f->field('a_bool')->value == ! $clone->field('a_bool')->value() , "Ok clone is different on boolean");
 
-  $clone->field('a_string')->value($f->field('a_string')->value().'_cloned!');
-  is($clone->field('a_string')->value() , $f->field('a_string')->value().'_cloned!' , "Ok clone differs on string");
+    $clone->field('a_string')->value($f->field('a_string')->value().'_cloned!');
+    is($clone->field('a_string')->value() , $f->field('a_string')->value().'_cloned!' , "Ok clone differs on string");
 
-  $clone->field('a_date')->value($f->field('a_date')->value()->clone->add( days => 1 ));
-  ok($clone->field('a_date')->value()->compare( $f->field('a_date')->value()->clone->add( days => 1 )) == 0 , "Ok clone differs on a date");
+    $clone->field('a_date')->value($f->field('a_date')->value()->clone->add( days => 1 ));
+    ok($clone->field('a_date')->value()->compare( $f->field('a_date')->value()->clone->add( days => 1 )) == 0 , "Ok clone differs on a date");
 
-  $clone->field('a_int')->value($f->field('a_int')->value() + 1 );
-  is($clone->field('a_int')->value(), $f->field('a_int')->value() + 1 , "Ok clone differs on a int");
-
-  $clone->field('a_set')->value([ @{ $f->field('a_set')->value() }, 'added']);
-  is_deeply($clone->field('a_set')->value(), [ @{ $f->field('a_set')->value() } , 'added' ] , "Ok clone differs on a set");
-
-  ok( $clone->field('a_set')->has_value('added') , "Cloned set has added value");
-  ok( !$f->field('a_set')->has_value('added') , "Original has no added value");
-
-  $clone->field('a_set')->remove_value('added');
-  $f->field('a_set')->add_value('added');
-  is_deeply($f->field('a_set')->value(), [ @{ $clone->field('a_set')->value() } , 'added' ] , "Ok could add and remove value");
+    $clone->field('a_int')->value($f->field('a_int')->value() + 1 );
+    is($clone->field('a_int')->value(), $f->field('a_int')->value() + 1 , "Ok clone differs on a int");
 
 
-  ## diag(Dumper($f->dump_errors()));
+    $clone->field('a_set')->value([ @{ $f->field('a_set')->value() }, 'added']);
+    is_deeply($clone->field('a_set')->value(), [ @{ $f->field('a_set')->value() } , 'added' ] , "Ok clone differs on a set");
+
+    ok( $clone->field('a_set')->has_value('added') , "Cloned set has added value");
+    ok( !$f->field('a_set')->has_value('added') , "Original has no added value");
+
+    $clone->field('a_set')->remove_value('added');
+    $f->field('a_set')->add_value('added');
+    is_deeply($f->field('a_set')->value(), [ @{ $clone->field('a_set')->value() } , 'added' ] , "Ok could add and remove value to original");
+    $f->field('a_set')->remove_value('added');
+
+  }
+
 }
+
 
 
 done_testing();
