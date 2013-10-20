@@ -74,7 +74,7 @@ sub jcom_db_mutex{
 
   my $dbh = $self->jcom_get_dbh();
 
-  $LOGGER->debug("WILL LOCK ON $ia,$ib");
+  $LOGGER->debug("WILL LOCK ON key '$key' -> $ia,$ib");
   $dbh->selectrow_arrayref("SELECT pg_advisory_lock(?, ?)" , {}, $ia , $ib);
   $LOGGER->debug("PASSED LOCK ON $ia,$ib");
 
