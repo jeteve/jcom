@@ -32,7 +32,11 @@ is( $f->field('adate')->value_struct() , '1977-10-20T05:30:01' );
 is( $f->field('month')->value_struct() , '1977-10-01' );
 
 ok( $f->field('month')->value_matches(DateTime->new( year => 1977 , month => 10 , day => 20 )), "Ok good match");
+ok( $f->field('month')->value_before(DateTime->new( year => 1977 , month => 10 , day => 20 )), "Ok good before match");
+ok( $f->field('month')->value_before(DateTime->new( year => 1978 , month => 10 , day => 20 )), "Ok good before match");
 ok( !$f->field('month')->value_matches(DateTime->new( year => 1977 , month => 9 , day => 20 )), "Ok good non-match");
+ok( !$f->field('month')->value_before(DateTime->new( year => 1977 , month => 9 , day => 20 )), "Ok good non-match on value_before");
+
 ok( !$f->field('month')->value_matches(undef) , "Ok no match on undef");
 #diag(Dumper($f->dump_errors()));
 $f->clear();

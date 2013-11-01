@@ -47,4 +47,11 @@ sub value_matches{
   return DateTime->compare($self->value(), $other->clone()->truncate( to => $self->date_truncation() )) == 0;
 }
 
+sub value_before{
+  my ($self, $other) = @_;
+  unless( defined $self->value() ){ return; }
+  unless( defined $other){ return; }
+  return DateTime->compare($self->value(), $other->clone()->truncate( to => $self->date_truncation() )) <= 0;
+}
+
 1;
