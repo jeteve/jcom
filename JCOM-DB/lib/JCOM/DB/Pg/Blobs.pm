@@ -20,7 +20,7 @@ Example:
     use Moose;
     with qw/JCOM::DB::Pg::Blobs/;
 
-    sub jcon_get_dbh{ .. return the dbh connection of your choice ..}
+    sub jcom_get_dbh{ .. return the dbh connection of your choice ..}
     ...
 
     package main;
