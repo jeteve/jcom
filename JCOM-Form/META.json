@@ -34,7 +34,7 @@
    "provides" : {
       "JCOM::Form" : {
          "file" : "lib/JCOM/Form.pm",
-         "version" : "0.01"
+         "version" : "0.02"
       },
       "JCOM::Form::Clerk" : {
          "file" : "lib/JCOM/Form/Clerk.pm",
@@ -70,6 +70,10 @@
       },
       "JCOM::Form::FieldRole" : {
          "file" : "lib/JCOM/Form/FieldRole.pm",
+         "version" : 0
+      },
+      "JCOM::Form::FieldRole::DateTruncate" : {
+         "file" : "lib/JCOM/Form/FieldRole/DateTruncate.pm",
          "version" : 0
       },
       "JCOM::Form::FieldRole::Email" : {
@@ -135,5 +139,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.01"
+   "version" : "0.02"
 }

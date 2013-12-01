@@ -22,7 +22,7 @@ name: JCOM-Form
 provides:
   JCOM::Form:
     file: lib/JCOM/Form.pm
-    version: 0.01
+    version: 0.02
   JCOM::Form::Clerk:
     file: lib/JCOM/Form/Clerk.pm
     version: 0
@@ -49,6 +49,9 @@ provides:
     version: 0
   JCOM::Form::FieldRole:
     file: lib/JCOM/Form/FieldRole.pm
+    version: 0
+  JCOM::Form::FieldRole::DateTruncate:
+    file: lib/JCOM/Form/FieldRole/DateTruncate.pm
     version: 0
   JCOM::Form::FieldRole::Email:
     file: lib/JCOM/Form/FieldRole/Email.pm
@@ -94,4 +97,4 @@ provides:
     version: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01
+version: 0.02
