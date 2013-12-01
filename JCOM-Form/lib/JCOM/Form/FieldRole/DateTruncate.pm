@@ -47,6 +47,18 @@ sub value_matches{
   return DateTime->compare($self->value(), $other->clone()->truncate( to => $self->date_truncation() )) == 0;
 }
 
+=head2 value_before
+
+Is the value before (inclusive) the given date in the set date_truncation?
+
+Usage:
+
+ if( $this->value_before(DateTime->now()) ){
+
+ }
+
+=cut
+
 sub value_before{
   my ($self, $other) = @_;
   unless( defined $self->value() ){ return; }
