@@ -1,0 +1,40 @@
+---
+abstract: 'Common database related code doc and version module.'
+author:
+  - 'Jerome Eteve <jerome@eteve.net>'
+build_requires:
+  Test::Exception: 0
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.42
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4203, CPAN::Meta::Converter version 2.112621'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: JCOM-DB
+provides:
+  JCOM::DB:
+    file: lib/JCOM/DB.pm
+    version: 0.02
+  JCOM::DB::DBIAble:
+    file: lib/JCOM/DB/DBIAble.pm
+    version: 0
+  JCOM::DB::Pg::Monitor:
+    file: lib/JCOM/DB/Pg/Monitor.pm
+    version: 0
+  JCOM::DBIC::FilterColumn::SymCrypt:
+    file: lib/JCOM/DBIC/FilterColumn/SymCrypt.pm
+    version: 0
+requires:
+  Crypt::OpenPGP: 0
+  DBD::Pg: 0
+  DBI: 0
+  DBIx::Class: 0
+  Digest::SHA: 5.61
+  Log::Log4perl: 1.29
+  Moose: 1.23
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.02

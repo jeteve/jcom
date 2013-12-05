@@ -3,13 +3,14 @@ Changes
 ignore.txt
 lib/JCOM/DB.pm
 lib/JCOM/DB/DBIAble.pm
-lib/JCOM/DB/Pg/Blobs.pm
 lib/JCOM/DB/Pg/Monitor.pm
 lib/JCOM/DBIC/FilterColumn/SymCrypt.pm
+Makefile.PL
 MANIFEST
+META.json
+META.yml
 README
 t/00-load.t
-t/01-pg_blobs.t
 t/02-symcrypt.t
 t/03-pg_monitor.t
 t/boilerplate.t

@@ -1,0 +1,62 @@
+{
+   "abstract" : "Common database related code doc and version module.",
+   "author" : [
+      "Jerome Eteve <jerome@eteve.net>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.4203",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "JCOM-DB",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::Exception" : "0",
+            "Test::More" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.42"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Crypt::OpenPGP" : "0",
+            "DBD::Pg" : "0",
+            "DBI" : "0",
+            "DBIx::Class" : "0",
+            "Digest::SHA" : "5.61",
+            "Log::Log4perl" : "1.29",
+            "Moose" : "1.23"
+         }
+      }
+   },
+   "provides" : {
+      "JCOM::DB" : {
+         "file" : "lib/JCOM/DB.pm",
+         "version" : "0.02"
+      },
+      "JCOM::DB::DBIAble" : {
+         "file" : "lib/JCOM/DB/DBIAble.pm"
+      },
+      "JCOM::DB::Pg::Monitor" : {
+         "file" : "lib/JCOM/DB/Pg/Monitor.pm"
+      },
+      "JCOM::DBIC::FilterColumn::SymCrypt" : {
+         "file" : "lib/JCOM/DBIC/FilterColumn/SymCrypt.pm"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
+   },
+   "version" : "0.02"
+}
