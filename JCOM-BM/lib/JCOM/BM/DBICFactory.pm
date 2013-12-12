@@ -212,8 +212,7 @@ WARNINGS:
 Make sure your resultset is ordered as
 it wouldn't make much sense to page through an unordered resultset.
 
-In case other things are concurrently adding to this resultset,
-this method will play a catchup game. And it is possible
+In case other things are concurrently adding to this resultset, it is possible
 that the code you give will be called with the same objects twice.
 
 If it's not the problem and if the rate at which objects are added is
@@ -258,9 +257,7 @@ sub loop_through{
     # Done with this page.
     # Go to the next one.
     $page++;
-    $search = $self->search(undef, { page => $page , $rows => $rows });
-    # This is in case some data was added.
-    $last_page = $search->pager->last_page();
+    $search = $self->search(undef, { page => $page , rows => $rows });
   }
 }
 
