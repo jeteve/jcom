@@ -176,20 +176,20 @@ cmp_ok( $bm->dbic_factory('ColouredProduct')->count() , '==' , 0 , 'No coloured 
     $bf->create( { bname => 'pageBuilder_'.$i });
   }
 
-  my $target_total = $bf->search()->count();
+  my $target_total = $bf->search(undef, { order_by => 'me.id'} )->count();
   my $real_total = 0;
-  $bf->loop_through(sub{ my $o = shift;
-                         isa_ok( $o , 'My::Schema::Result::Builder');
-                         $real_total++;
-                       });
+  $bf->search(undef , { order_by => 'me.id' })->loop_through(sub{ my $o = shift;
+                                                                  isa_ok( $o , 'My::Schema::Result::Builder');
+                                                                  $real_total++;
+                                                                });
   is( $real_total , $target_total , "Ok totals are the same");
 
   # Now try with a limit.
   my $limit = $target_total - 1;
   $real_total = 0;
-  $bf->loop_through(sub{ my $o = shift;
-                         $real_total++;
-                       } , $limit);
+  $bf->search(undef , { order_by => 'me.id' })->loop_through(sub{ my $o = shift;
+                                                                  $real_total++;
+                                                                } , { limit => $limit });
   is( $real_total , $limit , "Ok didnt go further than limit");
 }
 

@@ -207,7 +207,10 @@ Loop through all the elements of this factory
 whilst paging and execute the given code
 with the current retrieved object.
 
-WARNING:
+WARNINGS:
+
+Make sure your resultset is ordered as
+it wouldn't make much sense to page through an unordered resultset.
 
 In case other things are concurrently adding to this resultset,
 this method will play a catchup game. And it is possible
@@ -223,12 +226,15 @@ a frozen view of the resultset.
 Usage:
 
  $this->loop_through(sub{ my $o = shift ; do something with o });
- $this->loop_through(sub{...} , 1000 ); # Do only 1000 calls to sub.
+ $this->loop_through(sub{...} , { limit => 1000 }); # Do only 1000 calls to sub.
 
 =cut
 
 sub loop_through{
-  my ($self, $code , $limit ) = @_;
+  my ($self, $code , $opts ) = @_;
+
+  $opts //= {};
+  my $limit = $opts->{limit};
 
   # init
   my $page = 1;
