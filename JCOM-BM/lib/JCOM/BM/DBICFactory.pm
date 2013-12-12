@@ -207,29 +207,52 @@ Loop through all the elements of this factory
 whilst paging and execute the given code
 with the current retrieved object.
 
+WARNING:
+
+In case other things are concurrently adding to this resultset,
+this method will play a catchup game. And it is possible
+that the code you give will be called with the same objects twice.
+
+If it's not the problem and if the rate at which objects are added is
+not too fast compared to the processing you are doing in the code, it
+should be just fine.
+
+In other cases, you probably want to wrap this in a transaction to have
+a frozen view of the resultset.
+
 Usage:
 
- $this->loop_though(sub{ my $o = shift ; do something with o });
+ $this->loop_through(sub{ my $o = shift ; do something with o });
+ $this->loop_through(sub{...} , 1000 ); # Do only 1000 calls to sub.
 
 =cut
 
 sub loop_through{
-  my ($self, $code) = @_;
+  my ($self, $code , $limit ) = @_;
 
   # init
   my $page = 1;
   my $search = $self->search(undef , { page => $page });
   my $last_page = $search->pager->last_page();
+
+  my $ncalls = 0;
   # loop though all pages.
+ PAGELOOP:
   while( $page <= $last_page ){
     # Loop through this page
     while( my $o = $search->next() ){
       $code->($o);
+      $ncalls++;
+      if( $limit && ( $ncalls >= $limit ) ){
+        last PAGELOOP;
+      }
     }
     # Done with this page.
     # Go to the next one.
     $page++;
     $search = $self->search(undef, { page => $page });
+    # This is in case some data was added.
+    $last_page = $search->pager->last_page();
   }
 }
 

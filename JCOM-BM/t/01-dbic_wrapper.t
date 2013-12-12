@@ -183,6 +183,14 @@ cmp_ok( $bm->dbic_factory('ColouredProduct')->count() , '==' , 0 , 'No coloured 
                          $real_total++;
                        });
   is( $real_total , $target_total , "Ok totals are the same");
+
+  # Now try with a limit.
+  my $limit = $target_total - 1;
+  $real_total = 0;
+  $bf->loop_through(sub{ my $o = shift;
+                         $real_total++;
+                       } , $limit);
+  is( $real_total , $limit , "Ok didnt go further than limit");
 }
 
 
