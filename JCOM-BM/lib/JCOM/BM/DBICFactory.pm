@@ -227,6 +227,7 @@ Usage:
 
  $this->loop_through(sub{ my $o = shift ; do something with o });
  $this->loop_through(sub{...} , { limit => 1000 }); # Do only 1000 calls to sub.
+ $this->loop_through(sub{...} , { rows => 20 }); # Go by pages of 20 rows
 
 =cut
 
@@ -235,10 +236,11 @@ sub loop_through{
 
   $opts //= {};
   my $limit = $opts->{limit};
+  my $rows = $opts->{rows} // 10;
 
   # init
   my $page = 1;
-  my $search = $self->search(undef , { page => $page });
+  my $search = $self->search(undef , { page => $page , rows => $rows });
   my $last_page = $search->pager->last_page();
 
   my $ncalls = 0;
@@ -256,7 +258,7 @@ sub loop_through{
     # Done with this page.
     # Go to the next one.
     $page++;
-    $search = $self->search(undef, { page => $page });
+    $search = $self->search(undef, { page => $page , $rows => $rows });
     # This is in case some data was added.
     $last_page = $search->pager->last_page();
   }
