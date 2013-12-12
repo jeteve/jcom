@@ -201,7 +201,7 @@ sub all{
   return @res;
 }
 
-=head2 loop_though
+=head2 loop_through
 
 Loop through all the elements of this factory
 whilst paging and execute the given code
@@ -249,6 +249,7 @@ sub loop_through{
     while( my $o = $search->next() ){
       $code->($o);
       $ncalls++;
+      warn "NCALLS: $ncalls LIMIT: $limit\n";
       if( $limit && ( $ncalls >= $limit ) ){
         last PAGELOOP;
       }
