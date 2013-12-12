@@ -170,4 +170,20 @@ cmp_ok( $bm->dbic_factory('ColouredProduct')->count() , '==' , 0 , 'No coloured 
   dies_ok { $bm->dbic_factory('BoudinBlanc') } "No boudin blanc factory";
 }
 
+{
+  # Test inserting more stuff in builders.
+  for( my $i = 1 ; $i < 100 ; $i++ ){
+    $bf->create( { bname => 'pageBuilder_'.$i });
+  }
+
+  my $target_total = $bf->search()->count();
+  my $real_total = 0;
+  $bf->loop_through(sub{ my $o = shift;
+                         isa_ok( $o , 'My::Schema::Result::Builder');
+                         $real_total++;
+                       });
+  is( $real_total , $target_total , "Ok totals are the same");
+}
+
+
 done_testing();

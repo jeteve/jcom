@@ -201,6 +201,38 @@ sub all{
   return @res;
 }
 
+=head2 loop_though
+
+Loop through all the elements of this factory
+whilst paging and execute the given code
+with the current retrieved object.
+
+Usage:
+
+ $this->loop_though(sub{ my $o = shift ; do something with o });
+
+=cut
+
+sub loop_through{
+  my ($self, $code) = @_;
+
+  # init
+  my $page = 1;
+  my $search = $self->search(undef , { page => $page });
+  my $last_page = $search->pager->last_page();
+  # loop though all pages.
+  while( $page <= $last_page ){
+    # Loop through this page
+    while( my $o = $search->next() ){
+      $code->($o);
+    }
+    # Done with this page.
+    # Go to the next one.
+    $page++;
+    $search = $self->search(undef, { page => $page });
+  }
+}
+
 =head2 next
 
 Returns next Business Object from this current DBIx::Resultset.
