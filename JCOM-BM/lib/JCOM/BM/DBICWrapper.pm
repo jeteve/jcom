@@ -2,6 +2,7 @@ package JCOM::BM::DBICWrapper;
 use Moose::Role;
 use Moose::Meta::Class;
 use Module::Pluggable::Object;
+use Class::Load;
 
 =head1 NAME
 
@@ -121,7 +122,7 @@ sub _build__jcom_dbic_fact_classes{
     my $res = {};
     my $mp = Module::Pluggable::Object->new( search_path => [ $baseclass ]);
     foreach my $candidate_class ( $mp->plugins() ){
-	Class::MOP::load_class( $candidate_class );
+	Class::Load::load_class( $candidate_class );
 	# Code is loaded
 	unless( $candidate_class->isa('JCOM::BM::DBICFactory') ){
 	    warn "Class $candidate_class does not extend JCOM::BM::DBICFactory.";
