@@ -72,16 +72,47 @@ foreach ( 1..10 ){
   }
 }
 
+## Reconnect.
+$dbh = DBI->connect($dsn , '' , '' , { AutoCommit => 1, RaiseError => 1 });
+$o = My::Object->new({ dbh => $dbh });
+
 # Wait for all pids.
 foreach my $pid( @pids ){
   waitpid $pid, 0;
 }
 
+ok( ! $o->jcom_db_mutex_busy('some key') , "Ok 'some key' is NOT busy");
+
+# Fork a process to make the lock busy again
+{
+  if( my $pid = fork() ){
+    sleep(4);
+    # This should be busy if the child process manages to start within 4 seconds.
+    ok( $o->jcom_db_mutex_busy('some key') , "Ok 'some key' is busy");
+    waitpid $pid, 0;
+  }else{
+    # In a child process.
+    # Connect to the same DSN and so some horrible thing.
+    my $dbh = DBI->connect($dsn , '' , '' , { AutoCommit => 1, RaiseError => 1 });
+    my $o = My::Object->new({ dbh => $dbh });
+    $o->jcom_db_mutex('some key', sub{
+                        sleep(10);
+                        1;
+                      });
+    exit(0);
+  }
+}
+
+
+
 ## Reconnect.
 $dbh = DBI->connect($dsn , '' , '' , { AutoCommit => 1, RaiseError => 1 });
+$o = My::Object->new({ dbh => $dbh });
+
 
 my ($max) = $dbh->selectrow_array('SELECT MAX(id) FROM horrible_table');
 is( $max , 10 , "Ok we could add 10 distinct ids concurrently");
+ok( ! $o->jcom_db_mutex_busy('some key') , "Ok 'some key' is NOT busy");
 
 
 done_testing();

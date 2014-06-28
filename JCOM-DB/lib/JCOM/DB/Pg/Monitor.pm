@@ -64,15 +64,11 @@ Usage:
 sub jcom_db_mutex{
   my ($self, $key, $exclusive_code) = @_;
 
-  my $twenty_bytes = Digest::SHA::sha1($key);
-  my $four_first = substr($twenty_bytes, 0, 4);
-  my $four_next  = substr($twenty_bytes, 4, 4);
 
-  # Build two 32 bits integers.
-  my $ia = unpack('i' , $four_first);
-  my $ib = unpack('i' , $four_next);
 
   my $dbh = $self->jcom_get_dbh();
+
+  my ( $ia , $ib ) = $self->_jcom_db_mutex_keyab($key);
 
   $LOGGER->debug("WILL LOCK ON key '$key': $ia,$ib");
   $dbh->selectrow_arrayref("SELECT pg_advisory_lock(?, ?)" , {}, $ia , $ib);
@@ -86,6 +82,54 @@ sub jcom_db_mutex{
     confess("ERROR IN jcom_db_mutex: $err");
   }
   return $res;
+}
+
+=head2 jcom_db_mutex_busy
+
+Is the given key busy (locked) or not. Useful to avoid doing something twice in a raw.
+
+Note that there is no guarranty about this. You should just see that as a preliminary
+probing to proper locking.
+
+Usage:
+
+
+  # Avoid doing sub twice in a row.
+  unless( $this->jcom_db_mutex_busy($key) ){
+      $this->jcom_db_mutex($key, sub{ ... });
+  }
+
+=cut
+
+sub jcom_db_mutex_busy{
+  my ($self, $key) = @_;
+
+  my $dbh = $self->jcom_get_dbh();
+  my ( $ia , $ib ) = $self->_jcom_db_mutex_keyab($key);
+
+  $LOGGER->debug("WILL PROBE LOCK ON key '$key': $ia,$ib");
+
+  my $row = $dbh->selectrow_arrayref("SELECT pg_try_advisory_lock(?, ?)" , {}, $ia , $ib);
+  if( $row->[0] ){
+    $dbh->selectrow_arrayref("SELECT pg_advisory_unlock(?, ?)",{},  $ia, $ib);
+    return 0; # The lock was not busy
+  }
+
+  # Lock is busy
+  return 1;
+}
+
+sub _jcom_db_mutex_keyab{
+  my ($self, $key) = @_;
+  unless( $key ){ confess("No key given"); }
+
+  my $twenty_bytes = Digest::SHA::sha1($key);
+  my $four_first = substr($twenty_bytes, 0, 4);
+  my $four_next  = substr($twenty_bytes, 4, 4);
+  # Build two 32 bits integers.
+  my $ia = unpack('i' , $four_first);
+  my $ib = unpack('i' , $four_next);
+  return ($ia, $ib);
 }
 
 1;
