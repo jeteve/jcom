@@ -22,6 +22,7 @@ if( $@ ){
 
 my $pgsql = Test::postgresql->new();
 unless( $pgsql ){
+  no strict "refs";
   plan skip_all => ${"Test::postgresql::errstr"};
   done_testing();
 }
